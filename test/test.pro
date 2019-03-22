@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     TestQML \
-    MarkersTest
+    MarkersTest \
+    Example
