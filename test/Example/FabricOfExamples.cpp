@@ -12,3 +12,7 @@ Example *FabricOfExamples::createExampleChild_1() {
 Example *FabricOfExamples::createExampleChild_2() {
     return new ExampleChild_2();
 }
+
+Example *FabricOfExamples::createExampleChild_3() {
+    return new ExampleChild_3();
+}

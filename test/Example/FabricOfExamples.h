@@ -15,4 +15,6 @@ public slots:
     Example* createExampleChild_1();
 
     Example* createExampleChild_2();
+
+    Example* createExampleChild_3();
 };
