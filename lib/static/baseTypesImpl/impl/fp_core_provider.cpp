@@ -17,11 +17,6 @@ void FpCoreProvider::regCoreTypes()
                                 , 0
                                 , "LocalEvent" );
 
-  qmlRegisterType<LocalEventListModel>( "com.fun.fpcore"
-                                , 1
-                                , 0
-                                , "LocalEventList" );
-
   qmlRegisterType<FpFilter>( "com.fun.fpcore"
                                 , 1
                                 , 0

@@ -8,7 +8,6 @@
 #include "user/iuser.h"
 #include "ibase_signal_object.h"
 #include "local_event/ilocal_event.h"
-#include "local_event/local_event_list_model.h"
 #include "fpfilter.h"
 
 class QGeoCoordinate;

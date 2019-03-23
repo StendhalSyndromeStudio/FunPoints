@@ -5,6 +5,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#include "fp_server_client.h"
+
 FpServer::FpServer(QObject *parent)
   : QObject(parent)
   , tcpserver ( new TcpServer( this ) )
@@ -19,6 +21,9 @@ FpServer::FpServer(QObject *parent)
     qDebug() << "setting file: " << f.readAll();
     f.close();
   }
+
+  connect( tcpserver,   &TcpServer::connectedClient,
+           this,        &FpServer::incommingConnection );
 
   initilizeHandlers();
 }
@@ -42,7 +47,12 @@ void FpServer::initilizeHandlers()
 
 void FpServer::incommingConnection(TcpClient *client)
 {
+  auto sclient = new FpServerClient( client );
+  connect( sclient,   &FpServerClient::incommingCommand,
+           this,      &FpServer::incommingMessage );
 
+  connect( sclient,   &FpServerClient::destroyed,
+           sclient,   &FpServerClient::deleteLater );
 }
 
 void FpServer::incommingMessage(const QByteArray &data)
@@ -56,18 +66,12 @@ void FpServer::incommingClientMessage(FpServerClient *client, const QByteArray &
 {
   auto doc  = QJsonDocument::fromJson( data );
   if ( !doc.isNull() ) {
-    recognitionClientCommand( client, doc );
-  }
-}
+    auto cmd  = doc[ "cmd" ].toString();
+    auto buf  = doc[ "data" ].toObject();
 
-void FpServer::recognitionClientCommand(FpServerClient *client, const QJsonDocument &doc)
-{
-  auto cmd  = doc[ "cmd" ].toString();
-  auto data = doc[ "data" ].toObject();
+    qDebug() << cmd;
 
-  qDebug() << cmd << data;
-
-  if ( cmd == "reg" ) {
-
+    for ( auto *h: handlers.values( data))
+      h->handle( client, cmd, buf );
   }
 }

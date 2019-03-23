@@ -3,6 +3,8 @@
 
 #include <QUuid>
 #include <QDateTime>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "baseTypes/ibase_signal_object.h"
 
 class IPerson;
@@ -12,22 +14,40 @@ class IFeedback
 {
   Q_OBJECT
 protected:
-    explicit IFeedback(QObject *parent = nullptr);
+  QUuid     _uid;
+  QString   _title;
+  QString   _description;
+  QDateTime _publicshed;
+  int       _rate;
+  IPerson  *_person;
+  QList<IFeedback*> _pastList;
 public:
+  explicit IFeedback(QObject *parent = nullptr);
+  explicit IFeedback(const QString &title
+                     , const QString &text
+                     , int rate
+                     , IPerson *person
+                     , QObject *parent = nullptr);
   virtual ~IFeedback() override;
 
-public slots:
-  virtual QUuid uid() const = 0;
-  virtual QString title() const = 0;
-  virtual QString description() const = 0;
-  virtual QDateTime published() const = 0;
-
-  virtual int rate() const = 0;
-  virtual IPerson *user() const = 0;
-  virtual QList<IFeedback*> pastList() const = 0;
+public:
+  QJsonObject toJson() const;
 
 public slots:
-  virtual void edit(const QString &title, const QString &desc, int rate) = 0;
+  void fromJson(const QJsonObject &obj);
+
+public slots:
+  virtual QUuid uid() const;
+  virtual QString title() const;
+  virtual QString description() const;
+  virtual QDateTime published() const;
+
+  virtual int rate() const;
+  virtual IPerson *user() const;
+  virtual QList<IFeedback *> pastList() const;
+
+public slots:
+  virtual bool edit(const QString &title, const QString &desc, int rate);
 
 signals:
   void changed();

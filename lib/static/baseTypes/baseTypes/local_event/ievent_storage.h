@@ -10,13 +10,15 @@ class IEventStorage
     : public IBaseSignalObject
 {
   Q_OBJECT
+  QList<ILocalEvent*> allEvents;
 protected:
   explicit IEventStorage(QObject *parent = nullptr);
 public:
   virtual ~IEventStorage() override;
 
 public slots:
-  virtual QList<ILocalEvent*> events() const = 0;
+  virtual QJsonObject toJson() const;
+  virtual void fromJson(const QJsonObject &obj);
 
 public slots:
   virtual int eventCount() const;
@@ -25,13 +27,15 @@ public slots:
                               , const QString &desc
                               , const QDateTime &start
                               , const QDateTime &end
-                              , const QPointF &location );
+                              , const QGeoCoordinate &location
+                              , IUser *parent );
 
   virtual bool addEvent(ILocalEvent *event);
   virtual bool removeEvent(ILocalEvent *event);
 
 signals:
   void addedEvent(ILocalEvent *event);
+  void removedEvent(ILocalEvent *event);
 };
 
 #endif // EVENT_STORAGE_H

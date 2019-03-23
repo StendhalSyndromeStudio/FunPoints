@@ -2,16 +2,21 @@
 #define FP_SERVER_CLIENT_H
 
 #include <QObject>
+#include "impl/tcp/tcp_client.h"
 
-class FpServerClient : public QObject
+class FpServerClient
+    : public QObject
 {
   Q_OBJECT
+  TcpClient *client;
 public:
-  explicit FpServerClient(QObject *parent = nullptr);
+  explicit FpServerClient(TcpClient *client, QObject *parent = nullptr);
   ~FpServerClient() override;
-signals:
+public:
+  TcpClient *tcpClient() const;
 
-public slots:
+signals:
+  void incommingCommand(const QByteArray &data);
 };
 
 #endif // FP_SERVER_CLIENT_H

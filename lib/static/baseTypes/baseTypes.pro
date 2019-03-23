@@ -15,8 +15,7 @@ HEADERS += \
     baseTypes/user/iperson.h \
     baseTypes/user/iuser.h \
     baseTypes/ifp_core.h \
-    baseTypes/fpfilter.h \
-    baseTypes/local_event/local_event_list_model.h
+    baseTypes/fpfilter.h
 
 SOURCES += \
     baseTypes/local_event/iexternal_resource.cpp \
@@ -28,8 +27,7 @@ SOURCES += \
     baseTypes/user/iperson.cpp \
     baseTypes/user/iuser.cpp \
     baseTypes/ifp_core.cpp \
-    baseTypes/fpfilter.cpp \
-    baseTypes/local_event/local_event_list_model.cpp
+    baseTypes/fpfilter.cpp
 
 DISTFILES += \
     IFpCore \

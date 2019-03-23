@@ -122,6 +122,8 @@ ApplicationWindow {
         for(var i = 0; i < FpCore.eventCount(); ++i) {
             logArea.add ( FpCore.eventAt( i ).name() );
         }
+
+        show();
     }
 
     function updateLocation() {
