@@ -11,9 +11,8 @@ class IEventStorage
 {
   Q_OBJECT
   QList<ILocalEvent*> allEvents;
-protected:
-  explicit IEventStorage(QObject *parent = nullptr);
 public:
+  explicit IEventStorage(QObject *parent = nullptr);
   virtual ~IEventStorage() override;
 
 public slots:

@@ -5,6 +5,9 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#include <IEventStorage>
+#include <ClientStorage>
+
 #include "fp_server_client.h"
 
 FpServer::FpServer(QObject *parent)
@@ -45,6 +48,68 @@ void FpServer::initilizeHandlers()
       handlers.insertMulti( cmd, h );
 }
 
+IUser *FpServer::getFreeUser() const
+{
+  for ( auto u: ClientStorage::inst()->allUserList() ) {
+    bool finded = false;
+    for ( auto c: allClients ) {
+      if ( c->user() == u && c->client->isConnected() && u ) {
+        finded = true;
+        break;
+      }
+    }
+
+    if ( !finded )
+      return u;
+  }
+
+  return ClientStorage::inst()->user( QUuid() );
+}
+
+void FpServer::writeUpdates()
+{
+  writeUpdates( allClients );
+}
+
+void FpServer::writeUpdates(FpServerClient *client)
+{
+  writeUpdates( QList<FpServerClient*> { client } );
+}
+
+void FpServer::writeUpdates(const QList<FpServerClient *> &clients)
+{
+  writeClients( clients );
+  writeEvents( clients );
+
+
+  QJsonObject data;
+  QJsonArray array;
+  int i = 0;
+  for ( auto u: ClientStorage::inst()->allUserList() ) {
+    auto d = u->toJson();
+    d[ "created" ] = u->createdEvents()->toJson();
+    array.push_back( d );
+    ++i;
+  }
+
+  data[ "cmd" ] = "write";
+  data[ "data" ] = array;
+
+  auto out = QJsonDocument ( data ).toJson();
+  for ( auto &c: allClients )
+    c->client->write( out );
+}
+
+void FpServer::writeClients(const QList<FpServerClient *> &)
+{
+
+}
+
+void FpServer::writeEvents(const QList<FpServerClient *> &)
+{
+
+}
+
 void FpServer::incommingConnection(TcpClient *client)
 {
   auto sclient = new FpServerClient( client );
@@ -53,6 +118,8 @@ void FpServer::incommingConnection(TcpClient *client)
 
   connect( sclient,   &FpServerClient::destroyed,
            sclient,   &FpServerClient::deleteLater );
+  sclient->_user = getFreeUser();
+  writeUpdates( sclient );
 
   emit connectedClient( sclient );
 }
@@ -71,7 +138,17 @@ void FpServer::incommingClientMessage(FpServerClient *client, const QByteArray &
     auto cmd  = doc[ "cmd" ].toString();
     auto buf  = doc[ "data" ].toObject();
 
-    qDebug() << cmd;
+    if ( cmd == "reg" ) {
+      QJsonObject out;
+      out[ "cmd" ]  = "write_user";
+      out[ "data" ] = client->user()->toJson();
+
+      client->client->write( QJsonDocument ( out ).toJson() );
+    } else if ( cmd == "write" ) {
+      auto array = doc[ "data" ].toArray();
+      ClientStorage::inst()->write( array );
+      writeUpdates();
+    }
 
     for ( auto *h: handlers.values( data))
       h->handle( client, cmd, buf );

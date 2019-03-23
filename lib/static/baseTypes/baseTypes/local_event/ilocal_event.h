@@ -45,7 +45,7 @@ public:
   QStringList     _tags;
   TimeSpending    _time;
   QGeoCoordinate  _pos;
-  IUser           *_user;
+  mutable IUser   *_user;
   IRateObject     *_rate;
 public:
   explicit ILocalEvent(QObject *parent = nullptr);

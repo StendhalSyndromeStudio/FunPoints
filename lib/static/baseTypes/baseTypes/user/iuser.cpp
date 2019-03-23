@@ -1,7 +1,11 @@
 #include "iuser.h"
 
+#include <IEventStorage>
+
 IUser::IUser(QObject *parent)
   : IPerson(parent)
+  , created ( new IEventStorage() )
+  , visited ( new IEventStorage() )
 {
 
 }

@@ -2,6 +2,7 @@
 
 FpServerClient::FpServerClient(TcpClient *client, QObject *parent)
   : QObject(parent)
+  , _user ( nullptr )
   , client ( client )
 {
   connect( client,    &TcpClient::disconnected,
@@ -14,6 +15,11 @@ FpServerClient::FpServerClient(TcpClient *client, QObject *parent)
 FpServerClient::~FpServerClient()
 {
 
+}
+
+IUser *FpServerClient::user() const
+{
+  return _user;
 }
 
 TcpClient *FpServerClient::tcpClient() const

@@ -8,7 +8,7 @@ class IPerson
     : public QObject
 {
   Q_OBJECT
-protected:
+public:
   QUuid         _uid;
   QString       _fname;
   QString       _lname;

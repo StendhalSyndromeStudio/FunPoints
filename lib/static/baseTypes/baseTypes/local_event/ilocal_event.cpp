@@ -2,6 +2,7 @@
 
 #include <IUser>
 #include <QVariant>
+#include <ClientStorage>
 
 ILocalEvent::ILocalEvent(QObject *parent)
   : QObject(parent)
@@ -44,7 +45,7 @@ QJsonObject ILocalEvent::toJson() const
   obj[ "end" ]    = QString::number( _time.span.end.toMSecsSinceEpoch() );
   obj[ "lt" ]     = QString::number( _pos.latitude(), 'g', 10 );
   obj[ "lg" ]     = QString::number( _pos.longitude(), 'g', 10 );
-  obj[ "user" ]   = _user->uid().toString();
+  obj[ "user" ]   = organizer()->uid().toString();
   obj[ "rate" ]   = _rate->toJson();
 
   return obj;
@@ -65,6 +66,7 @@ void ILocalEvent::fromJson(const QJsonObject &obj)
       , QVariant ( obj[ "lg" ].toString() ).toDouble() );
 
   auto userUid = obj[ "user" ].toString();
+  _user = ClientStorage::inst()->user( userUid );
   _rate->fromJson( obj[ "rate" ].toObject() );
 }
 
@@ -90,6 +92,10 @@ QString ILocalEvent::description() const
 
 IUser *ILocalEvent::organizer() const
 {
+  if ( !_user ) {
+    _user = ClientStorage::inst()->user( "" );
+  }
+
   return _user;
 }
 

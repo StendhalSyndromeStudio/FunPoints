@@ -17,7 +17,7 @@ QJsonObject IEventStorage::toJson() const
   QJsonArray array;
 
   for ( int i = 0; i < allEvents.count(); ++i ) {
-    array[ i ] = allEvents[ i ]->toJson();
+    array.push_back( allEvents[ i ]->toJson() );
   }
 
   obj[ "childs" ] = array;

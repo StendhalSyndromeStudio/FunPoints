@@ -112,7 +112,7 @@ ApplicationWindow {
         console.log( "on completed" );
         FpCore.onUpdateLocation.connect( updateLocation );
         FpCore.onConnected.connect( connectedToServer );
-        FpCore.onDisconnected.connect( connectedToServer );
+        FpCore.onDisconnected.connect( disconnectedFromServer );
         FpCore.onError.connect( coreError );
         FpCore.onMessage.connect( coreMessage );
         updateLocation();
