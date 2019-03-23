@@ -70,7 +70,13 @@ TestLocalEvent::TestLocalEvent(QObject *parent)
   _tags = info.tags;
   _pos  = info.pos;
   _time = createSpending( info.start );
-  _user = ClientStorage::inst()->allUserList().first();
+
+  for ( auto u: ClientStorage::inst()->allUserList() ) {
+    if ( !u->firstName().isEmpty() ) {
+      _user = u;
+      break;
+    }
+  }
 }
 
 TestLocalEvent::TestLocalEvent(const QString &name, const QString &desc, const QDateTime &start, const QDateTime &end, const QGeoCoordinate &location, QObject *parent)
