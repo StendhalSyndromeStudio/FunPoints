@@ -39,6 +39,9 @@ public slots:
   ///
   virtual IUser *user() const = 0;
 
+  virtual IUser *remoteUser(int index);
+  virtual int remoteUserCount();
+
 public slots:
   virtual Filter *filter() const = 0;
   virtual int eventCount() const = 0;
