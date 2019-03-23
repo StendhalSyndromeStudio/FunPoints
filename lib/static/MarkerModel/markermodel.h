@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QGeoCoordinate>
+#include <QDateTime>
 
 class MarkerModel : public QAbstractListModel {
     Q_OBJECT
@@ -10,7 +11,10 @@ public:
     using QAbstractListModel::QAbstractListModel;
     enum MarkerRoles{ positionRole = Qt::UserRole + 1 };
 
-    Q_INVOKABLE void addMarker( const QGeoCoordinate &coordinate ){
+    Q_INVOKABLE void addMarker( const QGeoCoordinate &coordinate, const QString &title = "Концерт №", QDateTime start = QDateTime::currentDateTime( ), QDateTime end = QDateTime::currentDateTime( ) ) {
+        _title = title;
+        _startEvent = start;
+        _endEvent = end;
         beginInsertRows( QModelIndex( ), rowCount( ), rowCount( ) );
         m_coordinates.append( coordinate );
         endInsertRows( );
@@ -34,12 +38,18 @@ public:
         roles[ positionRole ] = "position";
         return roles;
     }
+signals:
+    void changeData( QGeoCoordinate geoData );
 public slots:
-    QVariant title( ) {
-        return 1;
-    }
+    QGeoCoordinate nextPoint( );
+    QString title( ) const;
+    QString time( ) const;
 private:
     QList<QGeoCoordinate> m_coordinates;
+    int _currentPoint{ 0 };
+    QString _title;
+    QDateTime _startEvent;
+    QDateTime _endEvent;
 };
 
 #endif // MARKERMODEL_H
