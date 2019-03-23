@@ -212,10 +212,10 @@ ApplicationWindow {
         FpCore.onDisconnected.connect( connectedToServer );
         FpCore.onError.connect( coreError );
         FpCore.onMessage.connect( coreMessage );
-        updateLocation();
+        updateLocation( );
 
         console.log( FpCore.eventCount() );
-        for(var i = 0; i < FpCore.eventCount(); ++i) {
+        for(var i = 0; i < FpCore.eventCount( ); ++i) {
             var event = FpCore.eventAt( i );
             var coordinate = event.location( );
             //var timeSpan = event.timeSpending( ).span;
