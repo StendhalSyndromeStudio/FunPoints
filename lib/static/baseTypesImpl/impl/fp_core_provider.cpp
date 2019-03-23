@@ -27,7 +27,7 @@ void FpCoreProvider::regCoreTypes()
                                 , 0
                                 , "LocalEventFilter" );
 
-  qmlRegisterSingletonType<IFpCore>("com.fun.fpcore"
+  qmlRegisterSingletonType<FpCore>("com.fun.fpcore"
                                     , 1
                                     , 0
                                     , "FpCore"

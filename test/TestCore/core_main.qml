@@ -5,8 +5,8 @@ import QtPositioning 5.5
 import QtLocation 5.6
 import com.fun.fpcore 1.0
 
-Rectangle {
-    anchors.fill: parent
+ApplicationWindow {
+    //anchors.fill: parent
 
     //! [Initialize Plugin]
     Plugin {

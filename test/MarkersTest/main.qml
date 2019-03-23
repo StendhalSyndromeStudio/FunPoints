@@ -4,6 +4,7 @@ import QtQuick.Controls 2.0
 import QtPositioning 5.5
 import QtLocation 5.6
 import org.simplemarkermodel.markermodel 1.0
+import com.fun.fpcore 1.0
 
 ApplicationWindow {
     property real myX: 59.995881
@@ -89,7 +90,7 @@ ApplicationWindow {
                 console.log( "setMarker:", coordinate );
                 markerModel.addMarker( coordinate )
 
-                markerModel.selectPoint( coordinate )
+                //markerModel.selectPoint( coordinate )
 
                 mapview.update( )
             }
@@ -132,7 +133,7 @@ ApplicationWindow {
 
             MapRoute {
                 route: routeData
-                line.color: "blue"
+                line.color: "orange"
                 line.width: 5
                 smooth: true
             }
@@ -202,5 +203,47 @@ ApplicationWindow {
             routeModel.update( )
             */
         }
+    }
+
+    Component.onCompleted: {
+        console.log( "on completed" );
+        FpCore.onUpdateLocation.connect( updateLocation );
+        FpCore.onConnected.connect( connectedToServer );
+        FpCore.onDisconnected.connect( connectedToServer );
+        FpCore.onError.connect( coreError );
+        FpCore.onMessage.connect( coreMessage );
+        updateLocation();
+
+        console.log( FpCore.eventCount() );
+        for(var i = 0; i < FpCore.eventCount(); ++i) {
+            console.log( "add point", FpCore.eventAt( i ).name() );
+            var coordinate = FpCore.eventAt( i ).location( );
+
+            markerModel.addMarker( coordinate )
+
+            //markerModel.selectPoint( coordinate )
+
+            mapview.update( )
+        }
+    }
+
+    function updateLocation() {
+//        logArea.add( qsTr( "Геолокация обновлена" ) );
+    }
+
+    function connectedToServer() {
+        logArea.add( qsTr( "Подключен к серверу" ) );
+    }
+
+    function disconnectedFromServer() {
+        logArea.add( qsTr( "Отключен от сервера" ) );
+    }
+
+    function coreError(code, message) {
+        logArea.add( qsTr( "Ошибка: %1: %2" ).arg( code ).arg( message ) );
+    }
+
+    function coreMessage(message) {
+        logArea.add( qsTr( "Сообщение: %1" ).arg( message ) );
     }
 }

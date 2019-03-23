@@ -1,6 +1,8 @@
 #include <QGuiApplication>
-#include <QQuickView>
+#include <QtQml>
+#include <QQmlEngine>
 #include <QQmlApplicationEngine>
+#include <QtQuickControls2/QQuickStyle>
 
 #include <FpCoreProvider>
 
@@ -11,10 +13,11 @@ int main(int argc, char *argv[])
 
   FpCoreProvider::regCoreTypes();
 
-  QQuickView view;
-  view.setSource(QUrl(QStringLiteral("qrc:///core_main.qml")));
-  view.setWidth(360);
-  view.setHeight(640);
-  view.show();
+  QQuickStyle::setStyle("Material");
+  QQmlApplicationEngine engine;
+  engine.load(QUrl(QStringLiteral("qrc:/core_main.qml")));
+  if (engine.rootObjects().isEmpty())
+      return -1;
+
   return app.exec();
 }
