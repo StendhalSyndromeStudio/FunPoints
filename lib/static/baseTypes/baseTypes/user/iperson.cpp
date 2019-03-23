@@ -1,7 +1,18 @@
 #include "iperson.h"
 
 IPerson::IPerson(QObject *parent)
-  : IRateObject (parent)
+  : QObject ( parent)
+  , _rate ( new IRateObject () )
+{
+
+}
+
+IPerson::IPerson(const QUuid &uid, const QString &f, const QString &l, const QString &m, QObject *parent)
+  : QObject ( parent )
+  , _uid ( uid )
+  , _fname ( f )
+  , _lname ( l )
+  , _mname ( m )
 {
 
 }
@@ -9,4 +20,53 @@ IPerson::IPerson(QObject *parent)
 IPerson::~IPerson()
 {
 
+}
+
+QJsonObject IPerson::toJson() const
+{
+  QJsonObject obj;
+  obj[ "uuid" ]  = _uid.toString();
+  obj[ "fname" ] = _fname;
+  obj[ "lname" ] = _lname;
+  obj[ "mname" ] = _mname;
+
+  return obj;
+}
+
+void IPerson::fromJson(const QJsonObject &obj)
+{
+  _uid    = obj[ "uuid" ].toString();
+  _fname  = obj[ "fname" ].toString();
+  _lname  = obj[ "lname" ].toString();
+  _mname  = obj[ "mname" ].toString();
+}
+
+IRateObject *IPerson::rate() const
+{
+  return _rate;
+}
+
+QUuid IPerson::uid() const
+{
+  return _uid;
+}
+
+QString IPerson::firstName() const
+{
+  return _fname;
+}
+
+QString IPerson::lastName() const
+{
+  return _lname;
+}
+
+QString IPerson::patronimic() const
+{
+  return  _mname;
+}
+
+QString IPerson::shortName() const
+{
+  return _lname;
 }

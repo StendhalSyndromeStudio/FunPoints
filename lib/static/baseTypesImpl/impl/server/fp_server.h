@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QObject>
+#include <IUser>
 #include "fp_server_client.h"
 #include "impl/tcp/tcp_server.h"
 #include "cmd/cmd_handler_provider.h"
@@ -10,7 +11,8 @@
 class FpServer : public QObject
 {
   Q_OBJECT
-  TcpServer   *tcpserver;
+  TcpServer               *tcpserver;
+  QList<FpServerClient*>  allClients;
   QMultiMap<QString, IServerCmdHandler*> handlers;
 public:
   explicit FpServer(QObject *parent = nullptr);
@@ -27,13 +29,19 @@ public slots:
 private:
   void initilizeHandlers();
 
+private:
+  IUser *getFreeUser() const;
+
 private slots:
+  void writeUpdates();
+  void writeUpdates(FpServerClient *client);
+  void writeUpdates(const QList<FpServerClient*> &clients);
+  void writeClients(const QList<FpServerClient*> &clients);
+  void writeEvents(const QList<FpServerClient*> &clients);
   void incommingConnection(TcpClient *client);
 
   void incommingMessage(const QByteArray &data);
   void incommingClientMessage(FpServerClient *client, const QByteArray &data);
-  void recognitionClientCommand(FpServerClient *client, const QJsonDocument &doc);
-
 };
 
 #endif // FP_SERVER_H

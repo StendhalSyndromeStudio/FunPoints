@@ -9,18 +9,19 @@ class IUser
     : public IPerson
 {
   Q_OBJECT
-protected:
-  explicit IUser(QObject *parent = nullptr);
+  IEventStorage   *created;
+  IEventStorage   *visited;
 public:
+  explicit IUser(QObject *parent = nullptr);
   virtual ~IUser() override;
 
 public slots:
   ///
   /// \brief Может ли пользователь создать событие
   ///
-  virtual bool canCreateEvent() const = 0;
-  virtual IEventStorage *createdEvents() const = 0;
-  virtual IEventStorage *visitedEvents() const = 0;
+  virtual bool canCreateEvent() const;
+  virtual IEventStorage *createdEvents() const;
+  virtual IEventStorage *visitedEvents() const;
 };
 
 #endif // IUSER_H

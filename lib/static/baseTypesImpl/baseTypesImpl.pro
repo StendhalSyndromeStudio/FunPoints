@@ -16,7 +16,10 @@ HEADERS += \
     impl/server/cmd/iclient_cmd_handler.h \
     impl/server/cmd/iserver_cmd_handler.h \
     impl/server/cmd/cmd_handler_provider.h \
-    impl/fp/test_local_event.h
+    impl/fp/test_local_event.h \
+    impl/fp/test_event_storage.h \
+    impl/server/cmd/client/event_storage_controller.h \
+    impl/server/users_storage.h
 
 SOURCES += \
     impl/fp_core.cpp \
@@ -29,7 +32,10 @@ SOURCES += \
     impl/server/cmd/iclient_cmd_handler.cpp \
     impl/server/cmd/iserver_cmd_handler.cpp \
     impl/server/cmd/cmd_handler_provider.cpp \
-    impl/fp/test_local_event.cpp
+    impl/fp/test_local_event.cpp \
+    impl/fp/test_event_storage.cpp \
+    impl/server/cmd/client/event_storage_controller.cpp \
+    impl/server/users_storage.cpp
 
 # Base types
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../baseTypes/release/ -lbaseTypes

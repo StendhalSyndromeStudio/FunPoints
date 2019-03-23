@@ -8,7 +8,6 @@
 #include "user/iuser.h"
 #include "ibase_signal_object.h"
 #include "local_event/ilocal_event.h"
-#include "local_event/local_event_list_model.h"
 #include "fpfilter.h"
 
 class QGeoCoordinate;
@@ -39,6 +38,9 @@ public slots:
   /// \brief Текущий пользователь
   ///
   virtual IUser *user() const = 0;
+
+  virtual IUser *remoteUser(int index);
+  virtual int remoteUserCount();
 
 public slots:
   virtual Filter *filter() const = 0;

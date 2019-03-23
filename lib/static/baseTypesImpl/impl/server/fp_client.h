@@ -16,6 +16,10 @@ public:
   explicit FpClient(QObject *parent = nullptr);
   ~FpClient() override;
 
+private slots:
+  void writeUpdates();
+  void incommingMessage(const QByteArray &data);
+
 public:
   bool isConnected() const;
 

@@ -5,6 +5,11 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#include <IEventStorage>
+#include <ClientStorage>
+
+#include "fp_server_client.h"
+
 FpServer::FpServer(QObject *parent)
   : QObject(parent)
   , tcpserver ( new TcpServer( this ) )
@@ -19,6 +24,9 @@ FpServer::FpServer(QObject *parent)
     qDebug() << "setting file: " << f.readAll();
     f.close();
   }
+
+  connect( tcpserver,   &TcpServer::connectedClient,
+           this,        &FpServer::incommingConnection );
 
   initilizeHandlers();
 }
@@ -40,9 +48,83 @@ void FpServer::initilizeHandlers()
       handlers.insertMulti( cmd, h );
 }
 
-void FpServer::incommingConnection(TcpClient *client)
+IUser *FpServer::getFreeUser() const
+{
+  for ( auto u: ClientStorage::inst()->allUserList() ) {
+    bool finded = false;
+    for ( auto c: allClients ) {
+      if ( c->user() == u && c->client->isConnected() && u ) {
+        finded = true;
+        break;
+      }
+    }
+
+    if ( !finded )
+      return u;
+  }
+
+  return ClientStorage::inst()->user( QUuid() );
+}
+
+void FpServer::writeUpdates()
+{
+  writeUpdates( allClients );
+}
+
+void FpServer::writeUpdates(FpServerClient *client)
+{
+  writeUpdates( QList<FpServerClient*> { client } );
+}
+
+void FpServer::writeUpdates(const QList<FpServerClient *> &clients)
+{
+  writeClients( clients );
+  writeEvents( clients );
+
+
+  QJsonObject data;
+  QJsonArray array;
+  int i = 0;
+  for ( auto u: ClientStorage::inst()->allUserList() ) {
+    auto d = u->toJson();
+    d[ "created" ] = u->createdEvents()->toJson();
+    array.push_back( d );
+    ++i;
+  }
+
+  data[ "cmd" ] = "write";
+  data[ "data" ] = array;
+
+  auto out = QJsonDocument ( data ).toJson();
+  for ( auto &c: clients )
+    c->client->write( out );
+}
+
+void FpServer::writeClients(const QList<FpServerClient *> &)
 {
 
+}
+
+void FpServer::writeEvents(const QList<FpServerClient *> &)
+{
+
+}
+
+void FpServer::incommingConnection(TcpClient *client)
+{
+  auto sclient = new FpServerClient( client );
+  connect( sclient,   &FpServerClient::incommingCommand,
+           this,      &FpServer::incommingMessage );
+
+  connect( sclient,   &FpServerClient::disconnected,
+           [this, sclient]() {
+    allClients.removeOne( sclient );
+  });
+  sclient->_user = getFreeUser();
+  allClients << sclient;
+  writeUpdates( sclient );
+
+  emit connectedClient( sclient );
 }
 
 void FpServer::incommingMessage(const QByteArray &data)
@@ -56,18 +138,23 @@ void FpServer::incommingClientMessage(FpServerClient *client, const QByteArray &
 {
   auto doc  = QJsonDocument::fromJson( data );
   if ( !doc.isNull() ) {
-    recognitionClientCommand( client, doc );
-  }
-}
+    auto cmd  = doc[ "cmd" ].toString();
+    auto buf  = doc[ "data" ].toObject();
 
-void FpServer::recognitionClientCommand(FpServerClient *client, const QJsonDocument &doc)
-{
-  auto cmd  = doc[ "cmd" ].toString();
-  auto data = doc[ "data" ].toObject();
+    if ( cmd == "reg" ) {
+      QJsonObject out;
+      out[ "cmd" ]  = "write_user";
+      out[ "data" ] = client->user()->toJson();
 
-  qDebug() << cmd << data;
+      client->client->write( QJsonDocument ( out ).toJson() );
+      writeUpdates( client );
+    } else if ( cmd == "write" ) {
+      auto array = doc[ "data" ].toArray();
+      ClientStorage::inst()->write( array );
+      writeUpdates();
+    }
 
-  if ( cmd == "reg" ) {
-
+    for ( auto *h: handlers.values( data))
+      h->handle( client, cmd, buf );
   }
 }

@@ -1,6 +1,7 @@
 #include "test_local_event.h"
 
 #include <cmath>
+#include <ClientStorage>
 
 struct EventInfoPrivate {
   QString         name, desc;
@@ -16,6 +17,14 @@ namespace  {
     ILocalEvent::TimeSpending res;
     res.span.start = start;
     res.span.end   = start.addSecs( 3600 * 2 );
+    return res;
+  }
+
+  static ILocalEvent::TimeSpending createSpending(const QDateTime &start, const QDateTime &end)
+  {
+    ILocalEvent::TimeSpending res;
+    res.span.start = start;
+    res.span.end   = end;
     return res;
   }
 
@@ -49,7 +58,7 @@ static QList<EventInfoPrivate> testList = {
 };
 
 TestLocalEvent::TestLocalEvent(QObject *parent)
-  : ILocalEvent (parent)
+  : ILocalEvent ( parent)
 {
   static int index = 0;
   if ( index > testList.count() )
@@ -57,105 +66,26 @@ TestLocalEvent::TestLocalEvent(QObject *parent)
 
   auto info = testList[ index++ ];
   _name = info.name;
-  _desk = info.desc;
+  _desc = info.desc;
   _tags = info.tags;
   _pos  = info.pos;
-  _rate = info.rate;
   _time = createSpending( info.start );
+
+  for ( auto u: ClientStorage::inst()->allUserList() ) {
+    if ( !u->firstName().isEmpty() ) {
+      _user = u;
+      break;
+    }
+  }
+}
+
+TestLocalEvent::TestLocalEvent(const QString &name, const QString &desc, const QDateTime &start, const QDateTime &end, const QGeoCoordinate &location, QObject *parent)
+  : ILocalEvent ( name, desc, start, end, location, nullptr, parent )
+{
 
 }
 
 TestLocalEvent::~TestLocalEvent()
 {
 
-}
-
-
-double TestLocalEvent::rate() const
-{
-  return _rate;
-}
-
-QList<IFeedback *> TestLocalEvent::feedback() const
-{
-  return QList<IFeedback *>();
-}
-
-bool TestLocalEvent::addFeedback(IFeedback *)
-{
-  return false;
-}
-QString TestLocalEvent::name() const
-{
-  return _name;
-}
-
-QStringList TestLocalEvent::tags() const
-{
-  return _tags;
-}
-
-QString TestLocalEvent::description() const
-{
-  return _desk;
-}
-
-IUser *TestLocalEvent::organizer() const
-{
-  return nullptr;
-}
-
-ILocalEvent::Status TestLocalEvent::status() const
-{
-  return Status::Published;
-}
-
-QGeoCoordinate TestLocalEvent::location() const
-{
-  return _pos;
-}
-
-ILocalEvent::TimeSpending TestLocalEvent::timeSpending() const
-{
-  return _time;
-}
-
-QList<IExternalResource *> TestLocalEvent::resources() const
-{
-  return QList<IExternalResource *>();
-}
-
-bool TestLocalEvent::writeInfo(const QString &name, const QString &desc)
-{
-  _name = name;
-  _desk = desc;
-
-  emit changed();
-  return true;
-}
-
-bool TestLocalEvent::writeLocation(const QGeoCoordinate &location)
-{
-  _pos = location;
-
-  emit changed();
-  return true;
-}
-
-bool TestLocalEvent::writeTimeSpanding(const ILocalEvent::TimeSpending &dt)
-{
-  _time = dt;
-
-  emit changed();
-  return true;
-}
-
-bool TestLocalEvent::addResource(IExternalResource *)
-{
-  return false;
-}
-
-bool TestLocalEvent::removeResource(IExternalResource *)
-{
-  return false;
 }
