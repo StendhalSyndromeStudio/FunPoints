@@ -2,6 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQml.Models 2.1
 import QtQuick.Controls.Material 2.3
+import com.fun.fpcore 1.0
+import "ComponentFactory.js" as Factory
 
 ApplicationWindow {
     id: app
@@ -37,32 +39,40 @@ ApplicationWindow {
             anchors.bottom: map.bottom
             //color: "#2d2d2d"
 
-//            Rectangle {
-//                id: eventsListMax
-//                anchors.top: parent.top
-//                width: parent.width
-//                height: 30
-//                radius: 10
-//                color: "#2d2d2d"
-//                MouseArea {
-//                        id: mouseAreaMax
-//                        anchors.fill: parent
-//                        onClicked: eventsList.state = 'maximized';
-//                    }
-//            }
-//            Rectangle {
-//                id: eventsListMin
-//                anchors.top: eventsListMax.bottom
-//                width: parent.width
-//                height: 30
-//                radius: 10
-//                color: "#2d2d2d"
-//                MouseArea {
-//                        id: mouseAreaMin
-//                        anchors.fill: parent
-//                        onClicked: eventsList.state = 'minimized';
-//                    }
-//            }
+
+            /*
+        for(var i = 0; i < FpCore.eventCount(); ++i) {
+            var event = FpCore.eventAt( i );
+            var coordinate = event.location( );
+            //var timeSpan = event.timeSpending( ).span;
+            var title = event.name( );
+            console.log( "add point", title );
+            markerModel.addMarker( coordinate, title  )
+            //markerModel.title( title );
+            //markerModel.selectPoint( coordinate )
+
+            mapview.update( )
+        }
+
+*/
+
+
+            ListModel {
+                id: eventsModel
+                Component.onCompleted: {
+
+
+                    for(var idx = 0; idx < FpCore.eventCount(); ++idx){
+                        var event = FpCore.eventAt( idx );
+                        var listElem = {};
+                        listElem.name = event.name( );
+                        listElem.coordinate = event.location( );
+                        eventsModel.insert(idx,listElem);
+
+                    }
+                }
+            }
+
             ScrollView {
                 id: eventsContainer
                 anchors.left: parent.left
@@ -71,151 +81,9 @@ ApplicationWindow {
                 height: eventsList.height - minMaxButtons.height
 
 
-
-
-//                ObjectModel {
-//                        id: itemModel
-//                        Rectangle {
-//                            height: 30
-//                            width: parent.width
-//                            color: "red"
-//                            Column {
-//                                spacing: 3
-//                                Row {
-//                                    Text { text : "Картинка" }
-//                                    Text { text : "Событие № " + (index + 1) }
-//                                }
-//                                Text { text : "Время проведения" }
-//                                Text { text : "Расстояние для точки" }
-//                                Text { text : "Организатор *****" }
-//                            }
-//                        }
-//                        Rectangle {
-//                            height: 30
-//                            width: parent.width
-//                            color: "red"
-//                            Column {
-//                                spacing: 3
-//                                Row {
-//                                    Text { text : "Картинка" }
-//                                    Text { text : "Событие № " + (index + 1) }
-//                                }
-//                                Text { text : "Время проведения" }
-//                                Text { text : "Расстояние для точки" }
-//                                Text { text : "Организатор *****" }
-//                            }
-//                        }
-//                        Rectangle {
-//                            height: 30
-//                            width: parent.width
-//                            color: "red"
-//                            Column {
-//                                spacing: 3
-//                                Row {
-//                                    Text { text : "Картинка" }
-//                                    Text { text : "Событие № " + (index + 1) }
-//                                }
-//                                Text { text : "Время проведения" }
-//                                Text { text : "Расстояние для точки" }
-//                                Text { text : "Организатор *****" }
-//                            }
-//                        }
-//                        Rectangle {
-//                            height: 30
-//                            width: parent.width
-//                            color: "red"
-//                            Column {
-//                                spacing: 3
-//                                Row {
-//                                    Text { text : "Картинка" }
-//                                    Text { text : "Событие № " + (index + 1) }
-//                                }
-//                                Text { text : "Время проведения" }
-//                                Text { text : "Расстояние для точки" }
-//                                Text { text : "Организатор *****" }
-//                            }
-//                        }
-//                        Rectangle {
-//                            height: 30
-//                            width: parent.width
-//                            color: "red"
-//                            Column {
-//                                spacing: 3
-//                                Row {
-//                                    Text { text : "Картинка" }
-//                                    Text { text : "Событие № " + (index + 1) }
-//                                }
-//                                Text { text : "Время проведения" }
-//                                Text { text : "Расстояние для точки" }
-//                                Text { text : "Организатор *****" }
-//                            }
-//                        }
-//                        Rectangle {
-//                            height: 30
-//                            width: parent.width
-//                            color: "red"
-//                            Column {
-//                                spacing: 3
-//                                Row {
-//                                    Text { text : "Картинка" }
-//                                    Text { text : "Событие № " + (index + 1) }
-//                                }
-//                                Text { text : "Время проведения" }
-//                                Text { text : "Расстояние для точки" }
-//                                Text { text : "Организатор *****" }
-//                            }
-//                        }
-//                        Rectangle {
-//                            height: 30
-//                            width: parent.width
-//                            color: "red"
-//                            Column {
-//                                spacing: 3
-//                                Row {
-//                                    Text { text : "Картинка" }
-//                                    Text { text : "Событие № " + (index + 1) }
-//                                }
-//                                Text { text : "Время проведения" }
-//                                Text { text : "Расстояние для точки" }
-//                                Text { text : "Организатор *****" }
-//                            }
-//                        }
-//                    }
-
-//                    ListView {
-//                        anchors.fill: parent
-//                        model: itemModel
-//                    }
-
-//                ListView {
-//                    id: lv
-//                    spacing: 10
-
-//                    width: parent.width
-//                    model: itemModel
-////                    delegate: Column {
-////                        spacing: 3
-//////                        Rectangle{
-//////                            anchors.fill: parent
-//////                            radius: 5
-//////                            color: "#882d2d"
-//////                        }
-
-////                        Row {
-////                            Text { text : "Картинка" }
-////                            Text { text : "Событие № " + (index + 1) }
-////                        }
-////                        Text { text : "Время проведения" }
-////                        Text { text : "Расстояние для точки" }
-////                        Text { text : "Организатор *****" }
-////                        width: parent.width
-
-////                    }
-//                }
-
                 ListView {
                   //anchors.fill: parent
-                  model: 20
+                  model: eventsModel
                   id: lv
                   spacing: 10
                   width: parent.width
@@ -230,10 +98,10 @@ ApplicationWindow {
                             spacing: 3
                             Row {
                                 Text { text : "Картинка" }
-                                Text { text : "Событие № " + (index + 1) }
+                                Text { text : name }
                             }
                             Text { text : "Время проведения" }
-                            Text { text : "Расстояние для точки" }
+                            Text { text : coordinate }
                             Text { text : "Организатор *****" }
                         }
                     }
