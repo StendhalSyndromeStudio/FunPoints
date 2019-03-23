@@ -13,6 +13,7 @@ Item {
 
         Item {
             id: txt
+
             GridLayout  {
                 id: layout
                 visible: true

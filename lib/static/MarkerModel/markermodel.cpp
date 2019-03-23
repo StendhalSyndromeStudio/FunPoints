@@ -16,6 +16,13 @@ QGeoCoordinate MarkerModel::nextPoint( )  {
     return  m_coordinates.at( _currentPoint );
 }
 
+void MarkerModel::selectPoint( QGeoCoordinate geoData ) {
+    if ( m_coordinates.contains( geoData ) ) {
+        int i = m_coordinates.indexOf( geoData );
+        emit changeData( m_coordinates.at( i ) );
+    }
+}
+
 QString MarkerModel::title( ) const {
     return _title + QString::number( m_coordinates.count( ) );
 }

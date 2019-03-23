@@ -42,6 +42,7 @@ signals:
     void changeData( QGeoCoordinate geoData );
 public slots:
     QGeoCoordinate nextPoint( );
+    void selectPoint( QGeoCoordinate geoData );
     QString title( ) const;
     QString time( ) const;
 private:
