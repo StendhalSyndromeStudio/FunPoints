@@ -15,12 +15,15 @@ Item {
                 text: "^"
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.width
+                Layout.topMargin: 0
+                Layout.bottomMargin: 0
             }
             ControlButton{
                 id: minimize
                 text: "v"
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.width
+
             }
         }
     }

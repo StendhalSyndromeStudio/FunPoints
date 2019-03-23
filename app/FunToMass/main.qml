@@ -10,7 +10,7 @@ ApplicationWindow {
 
     Item {
         anchors.fill: parent
-        MapDummy{
+        MapLeningrad{
             id: map
         }
 
@@ -29,12 +29,7 @@ ApplicationWindow {
             height: 300
             //color: "#2d2d2d"
             anchors.bottom: map.bottom
-            MinMaxButtons {
-                id: minMaxButtons
-                width: 50
-                height: 110
-                anchors.bottom: eventsContainer.top
-            }
+
 
 //            Rectangle {
 //                id: eventsListMax
@@ -67,7 +62,7 @@ ApplicationWindow {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 //anchors.bottom: map.bottom
-                //height: map.height / 2
+                height: eventsList.height - minMaxButtons.height
                 ListView {
                     id: lv
 
@@ -79,6 +74,12 @@ ApplicationWindow {
                         width: parent.width
                     }
                 }
+            }
+            MinMaxButtons {
+                id: minMaxButtons
+                width: 40
+                height: 50
+                anchors.bottom: parent.top
             }
             states: [
                 State {

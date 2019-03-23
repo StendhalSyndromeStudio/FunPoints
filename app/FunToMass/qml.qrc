@@ -7,5 +7,12 @@
         <file>Map.qml</file>
         <file>MapDummy.qml</file>
         <file>MinMaxButtons.qml</file>
+        <file>PointOfInterest.qml</file>
+        <file>MapLeningrad.qml</file>
+        <file>imgs/circle.png</file>
+        <file>imgs/guitar.png</file>
+        <file>imgs/key.png</file>
+        <file>imgs/star.png</file>
+        <file>main.cpp</file>
     </qresource>
 </RCC>
