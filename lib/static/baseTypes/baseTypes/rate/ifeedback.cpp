@@ -102,10 +102,14 @@ QList<IFeedback *> IFeedback::pastList() const
 
 bool IFeedback::edit(const QString &title, const QString &desc, int rate)
 {
-  _title        = title;
-  _description  = desc;
-  _rate         = rate;
+  if ( _title != title || _description != _description || _rate != rate ) {
+    _title        = title;
+    _description  = desc;
+    _rate         = rate;
 
-  emit changed();
+    emit changed();
+    ClientStorage::inst()->changedFeedback( this );
+  }
+
   return true;
 }

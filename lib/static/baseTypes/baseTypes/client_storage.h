@@ -27,6 +27,9 @@ public slots:
 signals:
   void addedUser(IUser *user);
   void addedEvent(ILocalEvent *event);
+  void changedEvent(ILocalEvent *event);
+  void addedFeedback(IFeedback *feedback);
+  void changedFeedback(IFeedback *feedback);
 };
 
 #endif // CLIENT_STORAGE_H

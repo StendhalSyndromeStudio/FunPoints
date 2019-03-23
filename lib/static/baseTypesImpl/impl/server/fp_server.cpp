@@ -96,7 +96,7 @@ void FpServer::writeUpdates(const QList<FpServerClient *> &clients)
   data[ "data" ] = array;
 
   auto out = QJsonDocument ( data ).toJson();
-  for ( auto &c: allClients )
+  for ( auto &c: clients )
     c->client->write( out );
 }
 
@@ -116,9 +116,12 @@ void FpServer::incommingConnection(TcpClient *client)
   connect( sclient,   &FpServerClient::incommingCommand,
            this,      &FpServer::incommingMessage );
 
-  connect( sclient,   &FpServerClient::destroyed,
-           sclient,   &FpServerClient::deleteLater );
+  connect( sclient,   &FpServerClient::disconnected,
+           [this, sclient]() {
+    allClients.removeOne( sclient );
+  });
   sclient->_user = getFreeUser();
+  allClients << sclient;
   writeUpdates( sclient );
 
   emit connectedClient( sclient );
@@ -144,6 +147,7 @@ void FpServer::incommingClientMessage(FpServerClient *client, const QByteArray &
       out[ "data" ] = client->user()->toJson();
 
       client->client->write( QJsonDocument ( out ).toJson() );
+      writeUpdates( client );
     } else if ( cmd == "write" ) {
       auto array = doc[ "data" ].toArray();
       ClientStorage::inst()->write( array );
