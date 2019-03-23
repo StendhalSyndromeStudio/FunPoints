@@ -1,5 +1,9 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    MarkerModel \
-    baseTypes
+    baseTypes \
+    baseTypesImpl \
+    MarkerModel
+
+
+baseTypesImpl.depends = baseTypes
