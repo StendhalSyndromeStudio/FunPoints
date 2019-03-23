@@ -1,0 +1,2 @@
+#include "QmlSingletonProvider.h"
+
