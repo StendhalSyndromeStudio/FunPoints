@@ -1,4 +1,8 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    baseTypes
+    baseTypes \
+    baseTypesImpl
+
+
+baseTypesImpl.depends = baseTypes
