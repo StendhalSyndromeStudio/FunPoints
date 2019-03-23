@@ -5,5 +5,7 @@
         <file>ControlButton.qml</file>
         <file>ControlButtons.qml</file>
         <file>Map.qml</file>
+        <file>MapDummy.qml</file>
+        <file>MinMaxButtons.qml</file>
     </qresource>
 </RCC>
