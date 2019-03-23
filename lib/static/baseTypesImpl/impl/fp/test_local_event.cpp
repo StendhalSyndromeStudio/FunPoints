@@ -1,6 +1,7 @@
 #include "test_local_event.h"
 
 #include <cmath>
+#include <ClientStorage>
 
 struct EventInfoPrivate {
   QString         name, desc;
@@ -69,7 +70,7 @@ TestLocalEvent::TestLocalEvent(QObject *parent)
   _tags = info.tags;
   _pos  = info.pos;
   _time = createSpending( info.start );
-
+  _user = ClientStorage::inst()->allUserList().first();
 }
 
 TestLocalEvent::TestLocalEvent(const QString &name, const QString &desc, const QDateTime &start, const QDateTime &end, const QGeoCoordinate &location, QObject *parent)

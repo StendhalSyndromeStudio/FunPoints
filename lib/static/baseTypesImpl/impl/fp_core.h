@@ -22,6 +22,7 @@ public:
 
 private:
   QList<ILocalEvent *> createTestEventList();
+  void updateEventsList();
 
   // IFpCore interface
 public slots:

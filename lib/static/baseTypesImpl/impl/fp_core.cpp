@@ -4,6 +4,8 @@
 #include <QGeoPositionInfo>
 #include <QGeoPositionInfoSource>
 
+#include <IEventStorage>
+#include <ClientStorage>
 #include "fp/test_local_event.h"
 
 FpCore::FpCore(QObject *parent)
@@ -11,7 +13,7 @@ FpCore::FpCore(QObject *parent)
   , client ( new FpClient(this) )
   , geoSource ( QGeoPositionInfoSource::createDefaultSource(this) )
 {
-  allEvents = createTestEventList();
+  updateEventsList();
 
   if ( geoSource ) {
     connect( geoSource,     &QGeoPositionInfoSource::positionUpdated,
@@ -48,6 +50,16 @@ QList<ILocalEvent *> FpCore::createTestEventList()
    result << new TestLocalEvent();
 
   return result;
+}
+
+void FpCore::updateEventsList()
+{
+  allEvents = createTestEventList();
+
+  for ( auto c: ClientStorage::inst()->allUserList() ) {
+    for ( auto e: c->createdEvents()->allEvents )
+      allEvents << e;
+  }
 }
 
 bool FpCore::isConnected() const

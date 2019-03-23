@@ -10,6 +10,7 @@ class IEventStorage
     : public IBaseSignalObject
 {
   Q_OBJECT
+public:
   QList<ILocalEvent*> allEvents;
 public:
   explicit IEventStorage(QObject *parent = nullptr);
