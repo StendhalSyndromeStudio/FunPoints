@@ -1,4 +1,5 @@
 QT          -= gui
+QT          += positioning qml
 TARGET      = baseTypes
 TEMPLATE    = lib
 CONFIG      += staticlib
@@ -13,7 +14,9 @@ HEADERS += \
     baseTypes/ibase_signal_object.h \
     baseTypes/user/iperson.h \
     baseTypes/user/iuser.h \
-    baseTypes/ifp_core.h
+    baseTypes/ifp_core.h \
+    baseTypes/fpfilter.h \
+    baseTypes/local_event/local_event_list_model.h
 
 SOURCES += \
     baseTypes/local_event/iexternal_resource.cpp \
@@ -24,7 +27,9 @@ SOURCES += \
     baseTypes/ibase_signal_object.cpp \
     baseTypes/user/iperson.cpp \
     baseTypes/user/iuser.cpp \
-    baseTypes/ifp_core.cpp
+    baseTypes/ifp_core.cpp \
+    baseTypes/fpfilter.cpp \
+    baseTypes/local_event/local_event_list_model.cpp
 
 DISTFILES += \
     IFpCore \

@@ -5,15 +5,6 @@ import QtPositioning 5.5
 import QtLocation 5.6
 import org.simplemarkermodel.markermodel 1.0
 
-/*
-Window {
-    visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello World")
-}
-*/
-
 ApplicationWindow {
     property real myX: 59.995881
     property real myY: 30.291263
@@ -34,6 +25,14 @@ ApplicationWindow {
             aQuery.addWaypoint( locationLeningrad )
             aQuery.addWaypoint( coordinate )
             routeModel.update( )
+        }
+    }
+    // слот для остлеживания изменения дистанции до выбранной точки
+    Connections {
+        target: routeModel
+        onUpdateDistance: {
+            console.log( "update distance", distance )
+            app.title = distance
         }
     }
 
@@ -66,6 +65,11 @@ ApplicationWindow {
                 delegate: routeDelegate
         }
 
+        MapItemView {
+            model: routeModel
+            delegate: poiComp
+        }
+
         onMapReadyChanged: {
             console.log( "changeReady" )
             myPosModel.addMarker( locationLeningrad )
@@ -84,6 +88,9 @@ ApplicationWindow {
                 var coordinate = mapview.toCoordinate( Qt.point( mouse.x,mouse.y ) )
                 console.log( "setMarker:", coordinate );
                 markerModel.addMarker( coordinate )
+
+                markerModel.selectPoint( coordinate )
+
                 mapview.update( )
             }
         }
@@ -128,7 +135,6 @@ ApplicationWindow {
                 line.color: "blue"
                 line.width: 5
                 smooth: true
-                //opacity: 0.8
             }
         }
     }
@@ -152,6 +158,9 @@ ApplicationWindow {
         plugin: mapPlugin
         autoUpdate: true
         query: aQuery
+        // сигнал с дистанцией до точки интереса
+        signal updateDistance( real distance )
+
         onStatusChanged: {
 
             switch ( routeModel.status ){
@@ -163,6 +172,9 @@ ApplicationWindow {
                 break;
             case RouteModel.Ready :
                 console.log( "RouteModel change status Ready", routeModel.status )
+                var route = routeModel.get(0)
+                console.log( "distance", route.distance )
+                updateDistance( route.distance )
                 mapview.update( )
                 break;
             case RouteModel.Error:
