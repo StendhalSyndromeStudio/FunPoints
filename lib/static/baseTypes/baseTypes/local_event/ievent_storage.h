@@ -19,14 +19,16 @@ public slots:
   virtual QList<ILocalEvent*> events() const = 0;
 
 public slots:
+  virtual int eventCount() const;
+  virtual ILocalEvent *eventAt(int index);
   virtual ILocalEvent *create(const QString &name
                               , const QString &desc
                               , const QDateTime &start
                               , const QDateTime &end
-                              , const QPointF &location ) = 0;
+                              , const QPointF &location );
 
-  virtual bool addEvent(ILocalEvent *event) = 0;
-  virtual bool removeEvent(ILocalEvent *event) = 0;
+  virtual bool addEvent(ILocalEvent *event);
+  virtual bool removeEvent(ILocalEvent *event);
 
 signals:
   void addedEvent(ILocalEvent *event);

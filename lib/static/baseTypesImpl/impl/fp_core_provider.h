@@ -17,6 +17,7 @@ public:
 public:
   // QML Fabric
 public:
+  static void regCoreTypes();
   static QObject* singletonProvider(QQmlEngine* engine, QJSEngine* scriptEngine);
 };
 
