@@ -90,7 +90,7 @@ ApplicationWindow {
                 console.log( "setMarker:", coordinate );
                 markerModel.addMarker( coordinate )
 
-                markerModel.selectPoint( coordinate )
+                //markerModel.selectPoint( coordinate )
 
                 mapview.update( )
             }
@@ -217,7 +217,13 @@ ApplicationWindow {
         console.log( FpCore.eventCount() );
         for(var i = 0; i < FpCore.eventCount(); ++i) {
             console.log( "add point", FpCore.eventAt( i ).name() );
-            var coort = FpCore.eventAt( i ).location( );
+            var coordinate = FpCore.eventAt( i ).location( );
+
+            markerModel.addMarker( coordinate )
+
+            //markerModel.selectPoint( coordinate )
+
+            mapview.update( )
         }
     }
 
