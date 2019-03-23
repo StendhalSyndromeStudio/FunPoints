@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.3
 
 Item {
     id: main
+    signal listEventsClicked()
     Item{
         anchors.fill: parent
         ColumnLayout {
@@ -32,6 +33,7 @@ Item {
                 text: "M"
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.width
+                onClicked: main.listEventsClicked();
             }
         }
     }
