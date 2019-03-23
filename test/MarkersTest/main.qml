@@ -15,11 +15,27 @@ Window {
 */
 
 ApplicationWindow {
+    property real myX: 59.995881
+    property real myY: 30.291263
+
+    property variant locationLeningrad: QtPositioning.coordinate( myX, myY )
+
     id: app
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("test")
+    width: 720
+    height: 1280
+    title: qsTr("Map")
+
+    Connections {
+        target: markerModel
+        onChangeData: {
+            var coordinate =  geoData;
+            aQuery.clearWaypoints( );
+            aQuery.addWaypoint( locationLeningrad )
+            aQuery.addWaypoint( coordinate )
+            routeModel.update( )
+        }
+    }
 
     Plugin {
         id: mapPlugin
@@ -32,71 +48,147 @@ ApplicationWindow {
         id: mapview
         anchors.fill: parent
         plugin: mapPlugin
-        center: QtPositioning.coordinate(59.91, 10.75)
-        zoomLevel: 14
-
-        MapItemView{
+        center: locationLeningrad
+        zoomLevel: 16
+        // Значок события
+        // Наша позиция на карте
+        MapItemView {
+            model: myPosModel
+            delegate: myPosition
+        }
+        MapItemView {
             model: markerModel
-            delegate: mapcomponent
+            delegate: poiComp
         }
 
-        MapItemView{
-            model: markerModel
-            delegate: mapcomponentTxt
+        MapItemView {
+                model: routeModel
+                delegate: routeDelegate
         }
-    }
 
-    Component {
-        id: mapcomponent
+        onMapReadyChanged: {
+            console.log( "changeReady" )
+            myPosModel.addMarker( locationLeningrad )
+            routeModel.update( )
+        }
 
-        MapQuickItem {
-            id: marker
-            anchorPoint.x: image.width/4
-            anchorPoint.y: image.height
-            coordinate: position
+        MouseArea {
+            anchors.fill: parent
 
-            sourceItem: Image {
-                id: image
-                //source: "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png"
-                source: "qrc:/imgs/guitar.png"
+            onClicked: {
+                //var coordinate = mapview.toCoordinate(Qt.point(mouse.x,mouse.y))
+                //console.log( "click:", coordinate );
+            }
 
+            onPressAndHold:  {
+                var coordinate = mapview.toCoordinate( Qt.point( mouse.x,mouse.y ) )
+                console.log( "setMarker:", coordinate );
+                markerModel.addMarker( coordinate )
+                mapview.update( )
+            }
+        }
+        // моя позиция
+        Component {
+            id: myPosition
+
+            MapQuickItem {
+                id: markerMy
+                anchorPoint.x: img.width * 0.5
+                anchorPoint.y: img.height
+                coordinate: position
+
+                sourceItem: Image {
+                    id: img
+                    source: "qrc:/imgs/circle.png"
+                }
+            }
+        }
+        // точка интереса
+        Component {
+            id:poiComp
+
+            MapQuickItem {
+                id: marker
+                coordinate: position
+                anchorPoint.x: 25
+                anchorPoint.y: 53
+                sourceItem: PointOfInterest {
+                    id:concretePoi
+                    title: markerModel.title( );
+                    time: markerModel.time( );
+                }
+            }
+        }
+        // маршрут
+        Component {
+            id: routeDelegate
+
+            MapRoute {
+                route: routeData
+                line.color: "blue"
+                line.width: 5
+                smooth: true
+                //opacity: 0.8
             }
         }
     }
-
-    Component {
-        id: mapcomponentTxt
-
-        MapQuickItem {
-            id: markerTxt
-            anchorPoint.x: -20
-            anchorPoint.y: 10
-            coordinate: position
-
-            sourceItem: Text {
-                id: txt
-                //source: "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png"
-                text: "Концерт"
-            }
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-
-        onClicked: {
-            var coordinate = mapview.toCoordinate(Qt.point(mouse.x,mouse.y))
-            console.log( "click:", coordinate );
-        }
-
-        onPressAndHold:  {
-            var coordinate = mapview.toCoordinate( Qt.point(mouse.x,mouse.y ) )
-            console.log( "setMarker:", coordinate );
-            markerModel.addMarker( coordinate )
-        }
-    }
-
+    // фабрика точек интересов
     MarkerModel {
         id:markerModel
+    }
+    // текущая позиция
+    MarkerModel {
+        id:myPosModel
+    }
+    // построение маршрутов
+    RouteQuery {
+        id: aQuery
+        travelModes: RouteQuery.PedestrianTravel
+        routeOptimizations: RouteQuery.ShortestRoute
+    }
+
+    RouteModel {
+        id: routeModel
+        plugin: mapPlugin
+        autoUpdate: true
+        query: aQuery
+        onStatusChanged: {
+
+            switch ( routeModel.status ){
+            case RouteModel.Null :
+                console.log( "RouteModel change status null", routeModel.status )
+                break;
+            case RouteModel.Loading:
+                console.log( "RouteModel change status Loading", routeModel.status )
+                break;
+            case RouteModel.Ready :
+                console.log( "RouteModel change status Ready", routeModel.status )
+                mapview.update( )
+                break;
+            case RouteModel.Error:
+                console.log( "RouteModel change status error", routeModel.errorString )
+                break;
+            }
+        }
+        onErrorChanged: {
+            console.log("RouteModel error")
+        }
+    }
+
+    // UI
+    Button {
+        id:nextBtn
+        text: 'Построить маршрут'
+        onClicked: {
+            markerModel.nextPoint( );
+            routeModel.update( )
+            /*
+            var coordinate=  markerModel.nextPoint( );
+            aQuery.clearWaypoints( );
+            aQuery.addWaypoint( locationLeningrad )
+            aQuery.addWaypoint( coordinate )
+            routeModel.update( )
+            */
+        }
     }
 }
