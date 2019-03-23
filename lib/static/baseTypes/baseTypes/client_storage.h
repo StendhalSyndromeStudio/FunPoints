@@ -5,6 +5,8 @@
 #include <IUser>
 #include <QObject>
 
+class ILocalEvent;
+
 class ClientStorage : public QObject
 {
   Q_OBJECT
@@ -23,7 +25,8 @@ public slots:
   void write(const QJsonArray &clientsArray);
 
 signals:
-  void addedUser(IUser *user) ;
+  void addedUser(IUser *user);
+  void addedEvent(ILocalEvent *event);
 };
 
 #endif // CLIENT_STORAGE_H
