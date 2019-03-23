@@ -4,6 +4,7 @@ import QtQuick.Controls 2.0
 import QtPositioning 5.5
 import QtLocation 5.6
 import org.simplemarkermodel.markermodel 1.0
+import com.fun.fpcore 1.0
 
 /*
 Window {
@@ -22,7 +23,8 @@ Item {
 
     id: app
     visible: true
-    anchors.fill: parent
+    width: 720
+    height: 1280
 
     Connections {
         target: markerModel
@@ -32,6 +34,14 @@ Item {
             aQuery.addWaypoint( locationLeningrad )
             aQuery.addWaypoint( coordinate )
             routeModel.update( )
+        }
+    }
+    // слот для остлеживания изменения дистанции до выбранной точки
+    Connections {
+        target: routeModel
+        onUpdateDistance: {
+            console.log( "update distance", distance )
+            //app.title = distance
         }
     }
 
@@ -64,6 +74,11 @@ Item {
                 delegate: routeDelegate
         }
 
+        MapItemView {
+            model: routeModel
+            delegate: poiComp
+        }
+
         onMapReadyChanged: {
             console.log( "changeReady" )
             myPosModel.addMarker( locationLeningrad )
@@ -82,6 +97,9 @@ Item {
                 var coordinate = mapview.toCoordinate( Qt.point( mouse.x,mouse.y ) )
                 console.log( "setMarker:", coordinate );
                 markerModel.addMarker( coordinate )
+
+                //markerModel.selectPoint( coordinate )
+
                 mapview.update( )
             }
         }
@@ -123,10 +141,9 @@ Item {
 
             MapRoute {
                 route: routeData
-                line.color: "blue"
+                line.color: "orange"
                 line.width: 5
                 smooth: true
-                //opacity: 0.8
             }
         }
     }
@@ -150,6 +167,9 @@ Item {
         plugin: mapPlugin
         autoUpdate: true
         query: aQuery
+        // сигнал с дистанцией до точки интереса
+        signal updateDistance( real distance )
+
         onStatusChanged: {
 
             switch ( routeModel.status ){
@@ -161,6 +181,9 @@ Item {
                 break;
             case RouteModel.Ready :
                 console.log( "RouteModel change status Ready", routeModel.status )
+                var route = routeModel.get(0)
+                console.log( "distance", route.distance )
+                updateDistance( route.distance )
                 mapview.update( )
                 break;
             case RouteModel.Error:
@@ -188,5 +211,47 @@ Item {
             routeModel.update( )
             */
         }
+    }
+
+    Component.onCompleted: {
+        console.log( "on completed" );
+        FpCore.onUpdateLocation.connect( updateLocation );
+        FpCore.onConnected.connect( connectedToServer );
+        FpCore.onDisconnected.connect( connectedToServer );
+        FpCore.onError.connect( coreError );
+        FpCore.onMessage.connect( coreMessage );
+        updateLocation();
+
+        console.log( FpCore.eventCount() );
+        for(var i = 0; i < FpCore.eventCount(); ++i) {
+            console.log( "add point", FpCore.eventAt( i ).name() );
+            var coordinate = FpCore.eventAt( i ).location( );
+
+            markerModel.addMarker( coordinate )
+
+            //markerModel.selectPoint( coordinate )
+
+            mapview.update( )
+        }
+    }
+
+    function updateLocation() {
+//        logArea.add( qsTr( "Геолокация обновлена" ) );
+    }
+
+    function connectedToServer() {
+        //logArea.add( qsTr( "Подключен к серверу" ) );
+    }
+
+    function disconnectedFromServer() {
+ //       logArea.add( qsTr( "Отключен от сервера" ) );
+    }
+
+    function coreError(code, message) {
+ //       logArea.add( qsTr( "Ошибка: %1: %2" ).arg( code ).arg( message ) );
+    }
+
+    function coreMessage(message) {
+  //      logArea.add( qsTr( "Сообщение: %1" ).arg( message ) );
     }
 }

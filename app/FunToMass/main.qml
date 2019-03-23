@@ -12,7 +12,8 @@ ApplicationWindow {
 
     Item {
         anchors.fill: parent
-        MapLeningrad{
+        MapLeningrad {
+        //MapDummy {
             id: map
         }
 

@@ -43,3 +43,30 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../l
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/release/MarkerModel.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/debug/MarkerModel.lib
 else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/libMarkerModel.a
+
+###
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypesImpl/release/ -lbaseTypesImpl
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypesImpl/debug/ -lbaseTypesImpl
+else:unix:!macx: LIBS += -L$$OUT_PWD/../../lib/static/baseTypesImpl/ -lbaseTypesImpl
+
+INCLUDEPATH += $$PWD/../../lib/static/baseTypesImpl
+DEPENDPATH += $$PWD/../../lib/static/baseTypesImpl
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/release/libbaseTypesImpl.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/debug/libbaseTypesImpl.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/release/baseTypesImpl.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/debug/baseTypesImpl.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/libbaseTypesImpl.a
+###
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypes/release/ -lbaseTypes
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypes/debug/ -lbaseTypes
+else:unix:!macx: LIBS += -L$$OUT_PWD/../../lib/static/baseTypes/ -lbaseTypes
+
+INCLUDEPATH += $$PWD/../../lib/static/baseTypes
+DEPENDPATH += $$PWD/../../lib/static/baseTypes
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/release/libbaseTypes.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/debug/libbaseTypes.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/release/baseTypes.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/debug/baseTypes.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/libbaseTypes.a
