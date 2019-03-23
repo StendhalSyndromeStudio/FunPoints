@@ -4,6 +4,9 @@ FpServerClient::FpServerClient(TcpClient *client, QObject *parent)
   : QObject(parent)
   , client ( client )
 {
+  connect( client,    &TcpClient::disconnected,
+           this,      &FpServerClient::disconnected );
+
   connect( client,    &TcpClient::incommingMessage,
            this,      &FpServerClient::incommingCommand );
 }

@@ -16,6 +16,7 @@ public:
   TcpClient *tcpClient() const;
 
 signals:
+  void disconnected();
   void incommingCommand(const QByteArray &data);
 };
 

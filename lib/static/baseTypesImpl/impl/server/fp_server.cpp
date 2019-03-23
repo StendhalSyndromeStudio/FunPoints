@@ -53,6 +53,8 @@ void FpServer::incommingConnection(TcpClient *client)
 
   connect( sclient,   &FpServerClient::destroyed,
            sclient,   &FpServerClient::deleteLater );
+
+  emit connectedClient( sclient );
 }
 
 void FpServer::incommingMessage(const QByteArray &data)
