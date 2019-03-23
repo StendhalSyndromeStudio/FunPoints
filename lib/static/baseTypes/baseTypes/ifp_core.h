@@ -2,36 +2,38 @@
 #define IFP_CORE_H
 
 #include <QPointF>
+#include <QGeoCoordinate>
+#include <QQmlListProperty>
 
 #include "user/iuser.h"
 #include "ibase_signal_object.h"
 #include "local_event/ilocal_event.h"
+#include "local_event/local_event_list_model.h"
+#include "fpfilter.h"
+
+class QGeoCoordinate;
+
+
 
 class IFpCore
     : public IBaseSignalObject
 {
   Q_OBJECT
 public:
-  struct Filter {
-    QPointF     location;
-    double      distance;
-    QDateTime   start;
-    QDateTime   end;
-    double      minRate = 0.0;
-  };
+  using Filter = FpFilter;
 protected:
   explicit IFpCore(QObject *parent = nullptr);
 public:
   virtual ~IFpCore() override;
 
 public slots:
-  virtual void isConnected() const = 0;
+  virtual bool isConnected() const = 0;
 
 public slots:
   ///
   /// \brief Текущая позиция
   ///
-  virtual QPointF location() const = 0;
+  virtual QGeoCoordinate location() const = 0;
 
   ///
   /// \brief Текущий пользователь
@@ -39,14 +41,21 @@ public slots:
   virtual IUser *user() const = 0;
 
 public slots:
-  virtual QList<ILocalEvent*> getEvents(const Filter &filter) const = 0;
+  virtual Filter *filter() const = 0;
+  virtual int eventCount() const = 0;
+  virtual ILocalEvent *eventAt(int index) const = 0;
 
+public slots:
+  virtual void setFilter(Filter *filter) = 0;
 signals:
   void connected();
   void disconnected();
 
   void userChanged();
   void updateLocation();
+  void eventListChanged();
+
+  void objectListChanged();
 };
 
 #endif // IFP_CORE_H

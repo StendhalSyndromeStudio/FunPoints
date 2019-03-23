@@ -4,6 +4,7 @@
 #include <QPointF>
 #include <QObject>
 #include <QDateTime>
+#include <QGeoCoordinate>
 #include "baseTypes/rate/irate_object.h"
 #include "iexternal_resource.h"
 
@@ -38,36 +39,41 @@ public:
   };
   Q_ENUM(Status)
 
-protected:
-  explicit ILocalEvent(QObject *parent = nullptr);
 public:
+  explicit ILocalEvent(QObject *parent = nullptr);
   virtual ~ILocalEvent() override;
 
 public slots:
-  virtual QString name() const = 0;
-  virtual QStringList tags() const = 0;
-  virtual QString description() const = 0;
-  virtual IUser *organizer() const = 0;
-  virtual Status status() const = 0;
+  virtual QString name() const;
+  virtual QStringList tags() const;
+  virtual QString description() const;
+  virtual IUser *organizer() const;
+  virtual Status status() const;
 
 public slots:
-  virtual QPointF location() const = 0;
-  virtual TimeSpending timeSpending() const = 0;
-  virtual QList<IExternalResource*> resources() const = 0;
+  virtual QGeoCoordinate location() const;
+  virtual TimeSpending timeSpending() const;
+  virtual QList<IExternalResource*> resources() const;
 
 public slots:
-  virtual bool writeInfo(const QString &name, const QString &desc) = 0;
-  virtual bool writeLocation(const QPointF &location) = 0;
-  virtual bool writeTimeSpanding(const TimeSpending &dt) = 0;
+  virtual bool writeInfo(const QString &name, const QString &desc);
+  virtual bool writeLocation(const QGeoCoordinate &location);
+  virtual bool writeTimeSpanding(const TimeSpending &dt);
 
 public slots:
-  virtual bool addResource(IExternalResource *resource) = 0;
-  virtual bool removeResource(IExternalResource *resource) = 0;
+  virtual bool addResource(IExternalResource *resource);
+  virtual bool removeResource(IExternalResource *resource);
 
 signals:
   void changed();
 
+  // IRateObject interface
 public slots:
+  double rate() const override;
+  QList<IFeedback *> feedback() const override;
+  bool addFeedback(IFeedback *feedback) override;
 };
+
+Q_DECLARE_METATYPE(ILocalEvent*)
 
 #endif // ILOCAL_EVENT_H
