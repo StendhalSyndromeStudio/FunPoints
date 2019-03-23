@@ -15,10 +15,45 @@ ApplicationWindow {
         anchors.fill: parent
 
         ListView {
+            id: lv
+            function selectExample(index){
+                switch((index + 1) % 3){
+                case 1:
+                    return FabricOfExamples.createExampleChild_1();
+                case 2:
+                    return FabricOfExamples.createExampleChild_2();
+                default:
+                    return FabricOfExamples.createExampleChild_3();
+                }
+            }
+
+            function createExampleChild(index){
+                var example = selectExample(index);
+                console.log( "Check instanceof of item #" + (index + 1) );
+                console.log( "example instanceof Example = " + (example instanceof Example) );
+                console.log( "example instanceof ExampleChild_1 = " + (example instanceof ExampleChild_1) );
+                console.log( "example instanceof ExampleChild_2 = " + (example instanceof ExampleChild_2) );
+                example.onTestSignal.connect(function(name){
+                    console.log("onTestSignal");
+                });
+                example.onNameChanged.connect(function(name){
+                    console.log("onNameChanged");
+                    console.log(name);
+                });
+                example.onNameDirectChanged.connect(function(name){
+                    console.log("onNameDirectChanged");
+                    console.log(name);
+                });
+
+                example.name = example.type + ", " + (index + 1) + " son of Example";
+                example.name_direct = example.type + ", " + (index + 1) + " son of Example  (direct)";
+                return example;
+            }
+
             width: parent.width
             model: 20
             delegate: ItemDelegate {
-                text: ( (index + 1) % 2 === 0 ? FabricOfExamples.createExampleChild_1().type : FabricOfExamples.createExampleChild_2().type ) + "___" + index + 1
+                text: lv.createExampleChild(index).type + "___" + (index + 1)
                 width: parent.width
             }
         }
