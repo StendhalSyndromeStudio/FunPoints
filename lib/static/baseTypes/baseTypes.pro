@@ -25,3 +25,13 @@ SOURCES += \
     baseTypes/user/iperson.cpp \
     baseTypes/user/iuser.cpp \
     baseTypes/ifp_core.cpp
+
+DISTFILES += \
+    IFpCore \
+    IUser \
+    IPerson \
+    IFeedback \
+    IRateObject \
+    IEventStorage \
+    IExternalResource \
+    ILocalEvent
