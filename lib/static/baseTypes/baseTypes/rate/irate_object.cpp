@@ -16,7 +16,7 @@ QJsonObject IRateObject::toJson() const
   QJsonArray data;
 
   for ( int i = 0; i < _feedback.count(); ++i ) {
-      data[ i ] = _feedback[ i ]->toJson();
+      data.push_back( _feedback[ i ]->toJson() );
   }
 
   QJsonObject out;
@@ -49,6 +49,10 @@ void IRateObject::fromJson(const QJsonObject &obj)
 
 double IRateObject::rate() const
 {
+  if ( feedback().isEmpty() ) {
+    return 5.0;
+  }
+
   double result = 0.0;
   for ( auto *obj: feedback() ) {
     result += obj->rate();

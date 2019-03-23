@@ -1,10 +1,13 @@
 #include "fp_client.h"
 
+#include <ClientStorage>
+
 #include <QJsonDocument>
 #include <QJsonObject>
 
 FpClient::FpClient(QObject *parent)
   : IBaseSignalObject(parent)
+  , user ( ClientStorage::inst()->user( "" ) )
   , client ( new TcpClient( this ) )
 {
   connect( client,    &TcpClient::connected,
@@ -25,7 +28,7 @@ bool FpClient::isConnected() const
 
 void FpClient::initConnection()
 {
-  client->connectToHost( QHostAddress::LocalHost, 7777 );
+  client->connectToHost( QHostAddress( "192.168.43.28" ), 7777 );
 }
 
 void FpClient::closeConnection()

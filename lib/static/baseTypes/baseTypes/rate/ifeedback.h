@@ -19,7 +19,7 @@ protected:
   QString   _description;
   QDateTime _publicshed;
   int       _rate;
-  IPerson  *_person;
+  mutable IPerson  *_person;
   QList<IFeedback*> _pastList;
 public:
   explicit IFeedback(QObject *parent = nullptr);

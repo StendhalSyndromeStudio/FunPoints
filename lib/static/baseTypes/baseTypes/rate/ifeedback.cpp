@@ -1,6 +1,8 @@
 #include "ifeedback.h"
 
+#include <IUser>
 #include <QVariant>
+#include <ClientStorage>
 
 IFeedback::IFeedback(QObject *parent)
   : IBaseSignalObject(parent)
@@ -31,10 +33,11 @@ QJsonObject IFeedback::toJson() const
   obj[ "desc" ]   = _description;
   obj[ "publ" ]   = QString::number( _publicshed.toMSecsSinceEpoch() );
   obj[ "rate" ]   = QString::number( _rate );
+  obj[ "user" ]   = user()->uid().toString();
 
   QJsonArray array;
   for ( int i = 0; i < _pastList.count(); ++i ) {
-    array[ i ] = _pastList[ i ]->toJson();
+    array.push_back( _pastList[ i ]->toJson() );
   }
 
   obj[ "childs" ] = array;
@@ -48,7 +51,7 @@ void IFeedback::fromJson(const QJsonObject &obj)
   _description  = obj[ "desc" ].toString();
   _publicshed   = QDateTime::fromMSecsSinceEpoch( QVariant ( obj[ "title" ].toString() ).toInt() );
   _rate         = QVariant ( obj[ "title" ].toString() ).toInt();
-//  _person       = parent;
+  _person       = ClientStorage::inst()->user( obj[ "user" ].toString() );
 
   auto array    = obj[ "childs" ].toArray();
   for ( int i = 0; i < array.count(); ++i ) {
@@ -85,6 +88,10 @@ int IFeedback::rate() const
 
 IPerson *IFeedback::user() const
 {
+  if ( !_person ) {
+    _person = ClientStorage::inst()->user( "" );
+  }
+
   return _person;
 }
 
