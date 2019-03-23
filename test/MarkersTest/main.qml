@@ -132,7 +132,7 @@ ApplicationWindow {
 
             MapRoute {
                 route: routeData
-                line.color: "blue"
+                line.color: "orange"
                 line.width: 5
                 smooth: true
             }

@@ -1,4 +1,4 @@
-QT      += quick positioning qml
+QT      += quick positioning qml location network quickcontrols2
 CONFIG  += c++11
 
 SOURCES += \
