@@ -4,4 +4,6 @@ SUBDIRS += \
     TestQML \
     Example \
     MarkersTest \
-    TestCore
+    TestCore \
+    Example \
+    RouteTest

@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>imgs/guitar.png</file>
+        <file>PointOfInterest.qml</file>
+        <file>imgs/key.png</file>
+        <file>imgs/star.png</file>
+        <file>imgs/circle.png</file>
     </qresource>
 </RCC>
