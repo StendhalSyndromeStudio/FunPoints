@@ -1,4 +1,5 @@
 QT += quick
+QT += location positioning quickcontrols2
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -29,3 +30,16 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES +=
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/MarkerModel/release/ -lMarkerModel
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/MarkerModel/debug/ -lMarkerModel
+else:unix:!macx: LIBS += -L$$OUT_PWD/../../lib/static/MarkerModel/ -lMarkerModel
+
+INCLUDEPATH += $$PWD/../../lib/static/MarkerModel
+DEPENDPATH += $$PWD/../../lib/static/MarkerModel
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/release/libMarkerModel.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/debug/libMarkerModel.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/release/MarkerModel.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/debug/MarkerModel.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/MarkerModel/libMarkerModel.a
