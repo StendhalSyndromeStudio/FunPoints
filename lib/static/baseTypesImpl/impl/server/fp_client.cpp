@@ -3,8 +3,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include "fp_server.h"
-
 FpClient::FpClient(QObject *parent)
   : IBaseSignalObject(parent)
   , client ( new TcpClient( this ) )
@@ -13,9 +11,6 @@ FpClient::FpClient(QObject *parent)
            this,      &FpClient::connectedToHost );
   connect( client,    &TcpClient::disconnected,
            this,      &FpClient::disconnectedFromHost );
-
-  auto serv = new FpServer();
-  serv->server()->listen( QHostAddress::Any, 7777 );
 }
 
 FpClient::~FpClient()

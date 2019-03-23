@@ -12,7 +12,7 @@ class IUser;
 class IExternalResource;
 
 class ILocalEvent
-    : public IRateObject
+    : public QObject
 {
   Q_OBJECT
 public:
@@ -39,11 +39,34 @@ public:
   };
   Q_ENUM(Status)
 
+  QUuid           _uid;
+  QString         _name;
+  QString         _desc;
+  QStringList     _tags;
+  TimeSpending    _time;
+  QGeoCoordinate  _pos;
+  IUser           *_user;
+  IRateObject     *_rate;
 public:
   explicit ILocalEvent(QObject *parent = nullptr);
+  explicit ILocalEvent(const QString &name
+                       , const QString &desc
+                       , const QDateTime &start
+                       , const QDateTime &end
+                       , const QGeoCoordinate &pos
+                       , IUser *user
+                       , QObject *parent = nullptr);
   virtual ~ILocalEvent() override;
 
 public slots:
+  IRateObject *rate() const;
+
+public slots:
+  virtual QJsonObject toJson() const;
+  virtual void fromJson(const QJsonObject &obj);
+
+public slots:
+  virtual QUuid uid() const;
   virtual QString name() const;
   virtual QStringList tags() const;
   virtual QString description() const;
@@ -51,6 +74,8 @@ public slots:
   virtual Status status() const;
 
 public slots:
+  virtual QDateTime start() const;
+  virtual QDateTime end() const;
   virtual QGeoCoordinate location() const;
   virtual TimeSpending timeSpending() const;
   virtual QList<IExternalResource*> resources() const;
@@ -58,6 +83,7 @@ public slots:
 public slots:
   virtual bool writeInfo(const QString &name, const QString &desc);
   virtual bool writeLocation(const QGeoCoordinate &location);
+  virtual bool writeTime(const QDateTime &start, const QDateTime &end);
   virtual bool writeTimeSpanding(const TimeSpending &dt);
 
 public slots:
@@ -66,12 +92,6 @@ public slots:
 
 signals:
   void changed();
-
-  // IRateObject interface
-public slots:
-  double rate() const override;
-  QList<IFeedback *> feedback() const override;
-  bool addFeedback(IFeedback *feedback) override;
 };
 
 Q_DECLARE_METATYPE(ILocalEvent*)

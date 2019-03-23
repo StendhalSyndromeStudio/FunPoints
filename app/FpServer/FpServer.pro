@@ -4,32 +4,18 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network qml positioning
+QT       += core gui network qml positioning widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+TARGET      = FpServer
+TEMPLATE    = app
+CONFIG      += c++11
 
-TARGET = FpServer
-TEMPLATE = app
-
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which has been marked as deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
-
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
-CONFIG += c++11
+HEADERS += \
+        server_main_window.h
 
 SOURCES += \
         main.cpp \
         server_main_window.cpp
-
-HEADERS += \
-        server_main_window.h
 
 FORMS += \
         server_main_window.ui
@@ -42,3 +28,29 @@ MOBILITY =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypesImpl/release/ -lbaseTypesImpl
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypesImpl/debug/ -lbaseTypesImpl
+else:unix:!macx: LIBS += -L$$OUT_PWD/../../lib/static/baseTypesImpl/ -lbaseTypesImpl
+
+INCLUDEPATH += $$PWD/../../lib/static/baseTypesImpl
+DEPENDPATH += $$PWD/../../lib/static/baseTypesImpl
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/release/libbaseTypesImpl.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/debug/libbaseTypesImpl.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/release/baseTypesImpl.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/debug/baseTypesImpl.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypesImpl/libbaseTypesImpl.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypes/release/ -lbaseTypes
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/baseTypes/debug/ -lbaseTypes
+else:unix:!macx: LIBS += -L$$OUT_PWD/../../lib/static/baseTypes/ -lbaseTypes
+
+INCLUDEPATH += $$PWD/../../lib/static/baseTypes
+DEPENDPATH += $$PWD/../../lib/static/baseTypes
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/release/libbaseTypes.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/debug/libbaseTypes.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/release/baseTypes.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/debug/baseTypes.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../../lib/static/baseTypes/libbaseTypes.a

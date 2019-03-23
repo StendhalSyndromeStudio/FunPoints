@@ -5,20 +5,38 @@
 #include "baseTypes/rate/irate_object.h"
 
 class IPerson
-    : public IRateObject
+    : public QObject
 {
   Q_OBJECT
 protected:
+  QUuid         _uid;
+  QString       _fname;
+  QString       _lname;
+  QString       _mname;
+  IRateObject   *_rate;
+protected:
   explicit IPerson(QObject *parent = nullptr);
+  explicit IPerson(const QUuid &uid
+                   , const QString &f
+                   , const QString &l
+                   , const QString &m
+                   , QObject *parent = nullptr );
 public:
   virtual ~IPerson() override;
 
+public:
+  virtual QJsonObject toJson() const;
+  virtual void fromJson(const QJsonObject &obj);
+
 public slots:
-  virtual QUuid uid() const = 0;
-  virtual QString firstName() const = 0;
-  virtual QString lastName() const = 0;
-  virtual QString patronimic() const = 0;
-  virtual QString shortName() const = 0;
+  IRateObject *rate() const;
+
+public slots:
+  virtual QUuid uid() const;
+  virtual QString firstName() const;
+  virtual QString lastName() const;
+  virtual QString patronimic() const;
+  virtual QString shortName() const;
 };
 
 

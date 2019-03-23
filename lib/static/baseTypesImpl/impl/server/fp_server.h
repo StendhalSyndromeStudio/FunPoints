@@ -32,8 +32,6 @@ private slots:
 
   void incommingMessage(const QByteArray &data);
   void incommingClientMessage(FpServerClient *client, const QByteArray &data);
-  void recognitionClientCommand(FpServerClient *client, const QJsonDocument &doc);
-
 };
 
 #endif // FP_SERVER_H
