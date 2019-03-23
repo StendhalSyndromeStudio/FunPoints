@@ -122,7 +122,7 @@ ApplicationWindow {
                 anchorPoint.y: 53
                 sourceItem: PointOfInterest {
                     id:concretePoi
-                    title: markerModel.title( );
+                    title: markerModel.title( position );
                     time: markerModel.time( );
                 }
             }
@@ -216,11 +216,13 @@ ApplicationWindow {
 
         console.log( FpCore.eventCount() );
         for(var i = 0; i < FpCore.eventCount(); ++i) {
-            console.log( "add point", FpCore.eventAt( i ).name() );
-            var coordinate = FpCore.eventAt( i ).location( );
-
-            markerModel.addMarker( coordinate )
-
+            var event = FpCore.eventAt( i );
+            var coordinate = event.location( );
+            //var timeSpan = event.timeSpending( ).span;
+            var title = event.name( );
+            console.log( "add point", title );
+            markerModel.addMarker( coordinate, title  )
+            //markerModel.title( title );
             //markerModel.selectPoint( coordinate )
 
             mapview.update( )
@@ -232,18 +234,18 @@ ApplicationWindow {
     }
 
     function connectedToServer() {
-        logArea.add( qsTr( "Подключен к серверу" ) );
+        //logArea.add( qsTr( "Подключен к серверу" ) );
     }
 
     function disconnectedFromServer() {
-        logArea.add( qsTr( "Отключен от сервера" ) );
+        //logArea.add( qsTr( "Отключен от сервера" ) );
     }
 
     function coreError(code, message) {
-        logArea.add( qsTr( "Ошибка: %1: %2" ).arg( code ).arg( message ) );
+        //logArea.add( qsTr( "Ошибка: %1: %2" ).arg( code ).arg( message ) );
     }
 
     function coreMessage(message) {
-        logArea.add( qsTr( "Сообщение: %1" ).arg( message ) );
+        //logArea.add( qsTr( "Сообщение: %1" ).arg( message ) );
     }
 }

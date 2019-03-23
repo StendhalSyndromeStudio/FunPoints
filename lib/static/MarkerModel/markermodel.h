@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QGeoCoordinate>
 #include <QDateTime>
+#include <QMap>
 
 class MarkerModel : public QAbstractListModel {
     Q_OBJECT
@@ -12,10 +13,11 @@ public:
     enum MarkerRoles{ positionRole = Qt::UserRole + 1 };
 
     Q_INVOKABLE void addMarker( const QGeoCoordinate &coordinate, const QString &title = "Концерт №", QDateTime start = QDateTime::currentDateTime( ), QDateTime end = QDateTime::currentDateTime( ) ) {
-        _title = title;
+        beginInsertRows( QModelIndex( ), rowCount( ), rowCount( ) );
+        m_Titles[ coordinate.toString( ) ] = title;
+        //_title = title;
         _startEvent = start;
         _endEvent = end;
-        beginInsertRows( QModelIndex( ), rowCount( ), rowCount( ) );
         m_coordinates.append( coordinate );
         endInsertRows( );
     }
@@ -43,10 +45,12 @@ signals:
 public slots:
     QGeoCoordinate nextPoint( );
     void selectPoint( QGeoCoordinate geoData );
-    QString title( ) const;
+    QString title( const QGeoCoordinate &coordinate ) const;
+    void title( QString v );
     QString time( ) const;
 private:
     QList<QGeoCoordinate> m_coordinates;
+    QMap<QString, QString> m_Titles;
     int _currentPoint{ 0 };
     QString _title;
     QDateTime _startEvent;
