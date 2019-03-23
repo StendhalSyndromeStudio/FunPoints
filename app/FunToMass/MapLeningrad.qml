@@ -6,7 +6,16 @@ import QtLocation 5.6
 import org.simplemarkermodel.markermodel 1.0
 import com.fun.fpcore 1.0
 
-ApplicationWindow {
+/*
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Hello World")
+}
+*/
+
+Item {
     property real myX: 59.995881
     property real myY: 30.291263
 
@@ -16,7 +25,6 @@ ApplicationWindow {
     visible: true
     width: 720
     height: 1280
-    title: qsTr("Map")
 
     Connections {
         target: markerModel
@@ -33,7 +41,7 @@ ApplicationWindow {
         target: routeModel
         onUpdateDistance: {
             console.log( "update distance", distance )
-            app.title = distance
+            //app.title = distance
         }
     }
 
@@ -122,7 +130,7 @@ ApplicationWindow {
                 anchorPoint.y: 53
                 sourceItem: PointOfInterest {
                     id:concretePoi
-                    title: markerModel.title( position );
+                    title: markerModel.title( );
                     time: markerModel.time( );
                 }
             }
@@ -216,13 +224,11 @@ ApplicationWindow {
 
         console.log( FpCore.eventCount() );
         for(var i = 0; i < FpCore.eventCount(); ++i) {
-            var event = FpCore.eventAt( i );
-            var coordinate = event.location( );
-            //var timeSpan = event.timeSpending( ).span;
-            var title = event.name( );
-            console.log( "add point", title );
-            markerModel.addMarker( coordinate, title  )
-            //markerModel.title( title );
+            console.log( "add point", FpCore.eventAt( i ).name() );
+            var coordinate = FpCore.eventAt( i ).location( );
+
+            markerModel.addMarker( coordinate )
+
             //markerModel.selectPoint( coordinate )
 
             mapview.update( )
@@ -238,14 +244,14 @@ ApplicationWindow {
     }
 
     function disconnectedFromServer() {
-        //logArea.add( qsTr( "Отключен от сервера" ) );
+ //       logArea.add( qsTr( "Отключен от сервера" ) );
     }
 
     function coreError(code, message) {
-        //logArea.add( qsTr( "Ошибка: %1: %2" ).arg( code ).arg( message ) );
+ //       logArea.add( qsTr( "Ошибка: %1: %2" ).arg( code ).arg( message ) );
     }
 
     function coreMessage(message) {
-        //logArea.add( qsTr( "Сообщение: %1" ).arg( message ) );
+  //      logArea.add( qsTr( "Сообщение: %1" ).arg( message ) );
     }
 }

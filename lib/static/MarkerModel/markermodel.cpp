@@ -23,8 +23,14 @@ void MarkerModel::selectPoint( QGeoCoordinate geoData ) {
     }
 }
 
-QString MarkerModel::title( ) const {
-    return _title + QString::number( m_coordinates.count( ) );
+QString MarkerModel::title(const QGeoCoordinate &coordinate) const {
+    //qDebug( ) << "get t:" << _title;
+    return m_Titles[ coordinate.toString( ) ];// + QString::number( m_coordinates.count( ) );
+}
+
+void MarkerModel::title( QString v ) {
+    _title = v;
+    qDebug( ) << "set t:" << _title;
 }
 
 QString MarkerModel::time( ) const {

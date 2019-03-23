@@ -16,6 +16,7 @@ FpCore::FpCore(QObject *parent)
   if ( geoSource ) {
     connect( geoSource,     &QGeoPositionInfoSource::positionUpdated,
              this,          &FpCore::updateLocation );
+    geoSource->startUpdates();
   }
 
   connect( client,  &FpClient::connected,
@@ -30,7 +31,7 @@ FpCore::FpCore(QObject *parent)
   connect( client,  &FpClient::eventListChanged,
            this,    &FpCore::eventListChanged );
 
-  geoSource->startUpdates();
+
   client->initConnection();
 }
 

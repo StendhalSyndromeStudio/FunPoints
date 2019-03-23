@@ -6,4 +6,5 @@ SUBDIRS += \
     MarkersTest \
     TestCore \
     Example \
-    RouteTest
+    RouteTest \
+    FilteringPageUi
