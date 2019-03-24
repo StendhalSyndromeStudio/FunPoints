@@ -46,6 +46,8 @@ void FpClient::writeUpdates()
     doc[ "data" ] = array;
     client->write( QJsonDocument ( doc ).toJson( ) );
   }
+
+  emit eventListChanged();
 }
 
 void FpClient::incommingMessage(const QByteArray &data)
