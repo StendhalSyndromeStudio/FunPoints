@@ -44,7 +44,7 @@ Item {
         target: routeModel
         onUpdateDistance: {
             console.log( "update distance", distance )
-            app.title = distance
+            //app.title = distance
         }
     }
 
@@ -95,7 +95,7 @@ Item {
                 //var coordinate = mapview.toCoordinate(Qt.point(mouse.x,mouse.y))
                 //console.log( "click:", coordinate );
             }
-
+            //TODO: запоминать, и использовать при нажатии кнопки добавить (+)
             onPressAndHold:  {
                 var coordinate = mapview.toCoordinate( Qt.point( mouse.x,mouse.y ) )
                 console.log( "setMarker:", coordinate );
@@ -128,12 +128,12 @@ Item {
 
             MapQuickItem {
                 id: marker
-                coordinate: position
+                coordinate: typeof position !== "undefined" && position ? position : locationLeningrad
                 anchorPoint.x: 25
                 anchorPoint.y: 53
                 sourceItem: PointOfInterest {
                     id:concretePoi
-                    title: markerModel.title( position );
+                    title: markerModel.title( marker.coordinate );
                     time: markerModel.time( );
                 }
             }

@@ -4,6 +4,7 @@ import QtQml.Models 2.1
 import QtQuick.Controls.Material 2.3
 import com.fun.fpcore 1.0
 import "ComponentFactory.js" as Factory
+import QtPositioning 5.5
 
 ApplicationWindow {
     id: app
@@ -57,7 +58,90 @@ ApplicationWindow {
 */
 
 
+            /*
+virtual QString name() const;
+virtual QStringList tags() const;
+virtual QString description() const;
+virtual Status status() const;
+virtual IUser *organizer() const;
+    virtual QString firstName() const = 0;
+    virtual QString lastName() const = 0;
+    virtual QString patronimic() const = 0;
+    virtual QString shortName() const = 0;
+
+IRateObject *rate()
+    virtual double rate() const;
+    virtual QList<IFeedback *> feedback() const;
+
+virtual QDateTime start() const;
+virtual QDateTime end() const;
+virtual QGeoCoordinate location() const;
+    Q_PROPERTY(double latitude READ latitude WRITE setLatitude)
+    Q_PROPERTY(double longitude READ longitude WRITE setLongitude)
+    Q_PROPERTY(double altitude READ altitude WRITE setAltitude)
+    Q_PROPERTY(bool isValid READ isValid)
+*/
+
+
             ListModel {
+                signal askRoute(double latitude, double longitude)
+                signal askDetails(double latitude, double longitude)
+
+                onAskRoute: {
+                    map.propMarkerModel.selectPoint(QtPositioning.coordinate( latitude, longitude ));
+                }
+
+                function organizerToString(value){
+                    var result = "";
+                    if(!value) return result;
+                    result += value.lastName();
+                    result += " " + value.firstName();
+                    result += " " + value.patronimic();
+                    return result;
+                }
+
+                function coordinateToStringAddress(value){
+                    var result = "";
+                    //TODO: конвертировать в адрес через сервис
+                    return result;
+                }
+
+                function rateToString(value){
+                    value = +value;
+                    if((value !== value) || (!value) || (value < 0)) return "";
+                    var result = "";
+                    for(var i = 0; i < value && i < 5; ++i){
+                        result += "*";
+                    }
+                    return result;
+                }
+
+                function rateToImageUrl(value){
+                    value = +value;
+                    if((value !== value) || (!value) || (value < 0)) return "";
+                    if(value >= 1 && value < 2) return "star1.png";
+                    if(value >= 2 && value < 3) return "star2.png";
+                    if(value >= 3 && value < 4) return "star3.png";
+                    if(value >= 4 && value < 5) return "star4.png";
+                    if(value >= 5) return "star5.png";
+                    return "";
+                }
+
+                function formatDate(date) {
+                  var monthNames = [
+                    "Января", "Февраля", "Марта",
+                    "Апреля", "Мая", "Июня", "Июля",
+                    "Августа", "Сентября", "Октября",
+                    "Ноября", "Декабря"
+                  ];
+
+                  var day = date.getDate();
+                  var monthIndex = date.getMonth();
+                  var year = date.getFullYear();
+
+                  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+                }
+
                 id: eventsModel
                 Component.onCompleted: {
 
@@ -67,6 +151,19 @@ ApplicationWindow {
                         var listElem = {};
                         listElem.name = event.name( );
                         listElem.coordinate = event.location( );
+                        listElem.address = coordinateToStringAddress(listElem.coordinate);
+                        listElem.description = event.description( );
+                        listElem.organizer = event.organizer( );
+                        listElem.organizerString = organizerToString(listElem.organizer);
+                        listElem.rate = (event.rate( ) || {}).rate( ) || 0; //да, именно 2 раза
+                        listElem.rateString = rateToString(listElem.rate);
+                        listElem.rateImgUrl = rateToImageUrl(listElem.rate);
+                        listElem.start = event.start( );
+                        listElem.end = event.end( );
+                        listElem.startFormatted = formatDate( listElem.start );
+                        listElem.endFormatted = formatDate( listElem.end );
+                        console.log(listElem);
+
                         eventsModel.insert(idx,listElem);
 
                     }
@@ -88,21 +185,52 @@ ApplicationWindow {
                   spacing: 10
                   width: parent.width
 
+                  /*
+                        listElem.name = event.name( );
+                        listElem.coordinate = event.location( );
+                        listElem.address = coordinateToStringAddress(listElem.coordinate);
+                        listElem.description = event.description( );
+                        listElem.organizer = event.organizer( );
+                        listElem.organizerString = organizerToString(listElem.organizer);
+                        listElem.rate = event.rate( ).rate( ); //да, именно 2 раза
+                        listElem.start = event.start( );
+                        listElem.end = event.end( );
+
+*/
+
+
                   delegate:
                     Rectangle {
                         width: parent.width
                         height: 70
-                        color: index % 2 == 0 ? "#993030" : "#883040"
+                        color: index % 2 == 0 ? "#dd3030" : "#dd3030"//"#aa3040"
                         radius: 10
-                        Column {
+                        Row {
                             spacing: 3
-                            Row {
-                                Text { text : "Картинка" }
-                                Text { text : name }
+                            Image {
+                                source: "imgs/key.png"
                             }
-                            Text { text : "Время проведения" }
-                            Text { text : coordinate }
-                            Text { text : "Организатор *****" }
+                            Column {
+                                spacing: 3
+                                Text { text : name; font.pointSize: 14 }
+                                Text { text : startFormatted + " - " + endFormatted; font.pointSize: 10 }
+                                Text { text : address; font.pointSize: 12 }
+                                Row {
+                                    Image { source : "imgs/"+rateImgUrl }
+                                    Text { text : organizerString; font.pointSize: 14 }
+                                }
+                                //Text { text : "Организатор *****" }
+                            }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                eventsModel.askRoute(coordinate.latitude,coordinate.longitude);
+                                console.log(coordinate.latitude + " " + coordinate.longitude);
+                            }
+                            onPressAndHold: {
+                                eventsModel.askDetails(coordinate.latitude,coordinate.longitude);
+                            }
                         }
                     }
                 }
@@ -148,7 +276,7 @@ ApplicationWindow {
                     PropertyChanges { target: eventsList; height: eventsList.parent.height / 2 }
                 }
             ]
-            state: "half"
+            state: "minimized"
         }
     }
 }

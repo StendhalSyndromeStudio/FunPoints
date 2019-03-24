@@ -15,5 +15,10 @@
         <file>imgs/star.png</file>
         <file>main.cpp</file>
         <file>ComponentFactory.js</file>
+        <file>imgs/star1.png</file>
+        <file>imgs/star2.png</file>
+        <file>imgs/star3.png</file>
+        <file>imgs/star4.png</file>
+        <file>imgs/star5.png</file>
     </qresource>
 </RCC>
