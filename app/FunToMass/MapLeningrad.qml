@@ -146,6 +146,7 @@ Item {
                 coordinate: typeof position !== "undefined" && position ? position : locationLeningrad
                 anchorPoint.x: 25
                 anchorPoint.y: 53
+                visible: marker.coordinate !== locationLeningrad
                 sourceItem: PointOfInterest {
                     id:concretePoi
                     title: markerModel.title( marker.coordinate );

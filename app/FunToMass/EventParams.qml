@@ -143,9 +143,10 @@ Rectangle {
 
                 TextField {
                     id: textField
+                    text: "Вечер авторской песни"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
                     placeholderText: qsTr("Text Field")
                 }
             }
@@ -172,9 +173,11 @@ Rectangle {
 
 
 
+
+
 /*##^## Designer {
-    D{i:5;anchors_height:100;anchors_width:100}D{i:9;anchors_height:100;anchors_width:100}
-D{i:14;anchors_height:100;anchors_width:100;anchors_x:0;anchors_y:0}D{i:13;invisible:true}
-D{i:1;anchors_height:100;anchors_width:100}
+    D{i:0;autoSize:true;height:480;width:640}D{i:5;anchors_height:100;anchors_width:100}
+D{i:9;anchors_height:100;anchors_width:100}D{i:14;anchors_height:100;anchors_width:100;anchors_x:0;anchors_y:0}
+D{i:13;invisible:true}D{i:1;anchors_height:100;anchors_width:100}
 }
  ##^##*/
