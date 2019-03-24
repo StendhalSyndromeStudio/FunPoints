@@ -6,6 +6,8 @@ import QtQuick.Controls.Material 2.3
 Item {
     id: main
     signal listEventsClicked()
+    signal filterClicked()
+    signal payClick
     Item{
         anchors.fill: parent
         ColumnLayout {
@@ -15,12 +17,14 @@ Item {
                 text: "+"
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.width
+                onClicked: main.payClick();
             }
             ControlButton{
                 id: filterEvents
                 text: "Y"
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.width
+                onClicked: main.filterClicked();
             }
             ControlButton{
                 id: myLocation
