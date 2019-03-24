@@ -1,4 +1,5 @@
 #include "irate_object.h"
+#include <ClientStorage>
 
 IRateObject::IRateObject(QObject *parrent)
   : IBaseSignalObject(parrent)
@@ -70,6 +71,7 @@ IFeedback *IRateObject::create(const QString &title, const QString &text, int ra
 {
   auto feedBack = new IFeedback( title, text, rate, user, this );
   addFeedback( feedBack );
+  ClientStorage::inst()->addedFeedback( feedBack );
   return  feedBack;
 }
 

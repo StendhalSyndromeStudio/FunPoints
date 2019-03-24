@@ -4,6 +4,8 @@
 #include <QGeoPositionInfo>
 #include <QGeoPositionInfoSource>
 
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <IEventStorage>
 #include <ClientStorage>
 #include "fp/test_local_event.h"
@@ -13,7 +15,7 @@ FpCore::FpCore(QObject *parent)
   , client ( new FpClient(this) )
   , geoSource ( QGeoPositionInfoSource::createDefaultSource(this) )
 {
-  updateEventsList();
+  rebuildEventsList();
 
   if ( geoSource ) {
     connect( geoSource,     &QGeoPositionInfoSource::positionUpdated,
@@ -52,7 +54,7 @@ QList<ILocalEvent *> FpCore::createTestEventList()
   return result;
 }
 
-void FpCore::updateEventsList()
+void FpCore::rebuildEventsList()
 {
   allEvents = createTestEventList();
 

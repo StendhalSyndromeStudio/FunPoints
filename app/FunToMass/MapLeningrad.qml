@@ -73,8 +73,8 @@ Item {
         }
 
         MapItemView {
-                model: routeModel
-                delegate: routeDelegate
+            model: routeModel
+            delegate: routeDelegate
         }
 
         MapItemView {

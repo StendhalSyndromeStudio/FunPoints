@@ -14,6 +14,7 @@ ILocalEvent::ILocalEvent(QObject *parent)
 
 ILocalEvent::ILocalEvent(const QString &name, const QString &desc, const QDateTime &start, const QDateTime &end, const QGeoCoordinate &pos, IUser *user, QObject *parent)
   : QObject ( parent )
+  , _uid ( ClientStorage::generateUuid() )
   , _name ( name )
   , _desc ( desc )
   , _pos ( pos )
@@ -131,25 +132,35 @@ QList<IExternalResource *> ILocalEvent::resources() const
 
 bool ILocalEvent::writeInfo(const QString &name, const QString &desc)
 {
-  _name = name;
-  _desc = desc;
+  if ( _name != name || _desc != desc ) {
+    _name = name;
+    _desc = desc;
 
-  emit changed();
+    ClientStorage::inst()->changedEvent( this );
+    emit changed();
+  }
   return true;
 }
 
 bool ILocalEvent::writeLocation(const QGeoCoordinate &location)
 {
-  _pos = location;
-  emit changed();
+  if ( _pos != location ) {
+    _pos = location;
+    ClientStorage::inst()->changedEvent( this );
+    emit changed();
+  }
   return true;
 }
 
 bool ILocalEvent::writeTime(const QDateTime &start, const QDateTime &end)
 {
-  _time.span.start  = start;
-  _time.span.end    = end;
-  emit changed();
+  if ( _time.span.start != start || _time.span.end != end ) {
+    _time.span.start  = start;
+    _time.span.end    = end;
+    ClientStorage::inst()->changedEvent( this );
+    emit changed();
+  }
+
   return true;
 }
 

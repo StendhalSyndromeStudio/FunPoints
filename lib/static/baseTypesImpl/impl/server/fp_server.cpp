@@ -1,9 +1,11 @@
 #include "fp_server.h"
 
+#include <QDir>
 #include <QFile>
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QCoreApplication>
 
 #include <IEventStorage>
 #include <ClientStorage>
@@ -29,6 +31,8 @@ FpServer::FpServer(QObject *parent)
            this,        &FpServer::incommingConnection );
 
   initilizeHandlers();
+  loadDb();
+  saveDb();
 }
 
 FpServer::~FpServer()
@@ -46,6 +50,34 @@ void FpServer::initilizeHandlers()
   for ( auto h: CmdHandlerProvider::createHandlers() )
     for ( auto &cmd: h->cmdList() )
       handlers.insertMulti( cmd, h );
+}
+
+void FpServer::saveDb()
+{
+  QJsonArray array;
+  for ( auto u: ClientStorage::inst()->allUserList() ) {
+    auto d = u->toJson();
+    d[ "created" ] = u->createdEvents()->toJson();
+    array.push_back( d );
+  }
+
+  QFile f ( QDir::fromNativeSeparators(
+              QCoreApplication::applicationDirPath() + "/db.json" ) );
+  if ( f.open( QIODevice::WriteOnly ) ) {
+    f.write( QJsonDocument( array ).toJson() );
+    f.close();
+  }
+}
+
+void FpServer::loadDb()
+{
+  QFile f ( QDir::fromNativeSeparators(
+              QCoreApplication::applicationDirPath() + "/db.json" ) );
+  if ( f.open( QIODevice::ReadOnly ) ) {
+    auto array = QJsonDocument::fromJson( f.readAll() ).array();
+    ClientStorage::inst()->write( array );
+    f.close();
+  }
 }
 
 IUser *FpServer::getFreeUser() const
@@ -96,7 +128,7 @@ void FpServer::writeUpdates(const QList<FpServerClient *> &clients)
   data[ "data" ] = array;
 
   auto out = QJsonDocument ( data ).toJson();
-  for ( auto &c: allClients )
+  for ( auto &c: clients )
     c->client->write( out );
 }
 
@@ -116,9 +148,12 @@ void FpServer::incommingConnection(TcpClient *client)
   connect( sclient,   &FpServerClient::incommingCommand,
            this,      &FpServer::incommingMessage );
 
-  connect( sclient,   &FpServerClient::destroyed,
-           sclient,   &FpServerClient::deleteLater );
+  connect( sclient,   &FpServerClient::disconnected,
+           [this, sclient]() {
+    allClients.removeOne( sclient );
+  });
   sclient->_user = getFreeUser();
+  allClients << sclient;
   writeUpdates( sclient );
 
   emit connectedClient( sclient );
@@ -144,10 +179,12 @@ void FpServer::incommingClientMessage(FpServerClient *client, const QByteArray &
       out[ "data" ] = client->user()->toJson();
 
       client->client->write( QJsonDocument ( out ).toJson() );
+      writeUpdates( client );
     } else if ( cmd == "write" ) {
       auto array = doc[ "data" ].toArray();
       ClientStorage::inst()->write( array );
       writeUpdates();
+      saveDb();
     }
 
     for ( auto *h: handlers.values( data))
