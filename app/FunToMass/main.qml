@@ -303,7 +303,7 @@ virtual QGeoCoordinate location() const;
                         Row {
                             spacing: 3
                             Image {
-                                anchors.fill: height
+                                //anchors.fill: parent
                                 source: "imgs/key.png"
                             }
                             Column {
