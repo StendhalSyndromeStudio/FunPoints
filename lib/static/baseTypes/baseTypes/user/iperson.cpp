@@ -25,7 +25,7 @@ IPerson::~IPerson()
 QJsonObject IPerson::toJson() const
 {
   QJsonObject obj;
-  obj[ "uuid" ]  = _uid.toString();
+  obj[ "uid" ]  = _uid.toString();
   obj[ "fname" ] = _fname;
   obj[ "lname" ] = _lname;
   obj[ "mname" ] = _mname;
@@ -35,7 +35,7 @@ QJsonObject IPerson::toJson() const
 
 void IPerson::fromJson(const QJsonObject &obj)
 {
-  _uid    = obj[ "uuid" ].toString();
+  _uid    = obj[ "uid" ].toString();
   _fname  = obj[ "fname" ].toString();
   _lname  = obj[ "lname" ].toString();
   _mname  = obj[ "mname" ].toString();

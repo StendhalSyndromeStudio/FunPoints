@@ -24,10 +24,12 @@ public:
 signals:
   void connectedClient(FpServerClient *client);
 
-public slots:
-
 private:
   void initilizeHandlers();
+
+private slots:
+  void saveDb();
+  void loadDb();
 
 private:
   IUser *getFreeUser() const;

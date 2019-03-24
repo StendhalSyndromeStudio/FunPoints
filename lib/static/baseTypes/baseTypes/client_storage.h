@@ -18,6 +18,7 @@ public:
 public:
   static ClientStorage *inst();
   static ClientStorage *instance();
+  static QUuid generateUuid();
 
 public slots:
   IUser *user(const QUuid &uid);

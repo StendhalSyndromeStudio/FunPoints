@@ -1,6 +1,7 @@
 #include "test_local_event.h"
 
 #include <cmath>
+#include <IEventStorage>
 #include <ClientStorage>
 
 struct EventInfoPrivate {
@@ -74,6 +75,7 @@ TestLocalEvent::TestLocalEvent(QObject *parent)
   for ( auto u: ClientStorage::inst()->allUserList() ) {
     if ( !u->firstName().isEmpty() ) {
       _user = u;
+      _user->createdEvents()->addEvent( this );
       break;
     }
   }

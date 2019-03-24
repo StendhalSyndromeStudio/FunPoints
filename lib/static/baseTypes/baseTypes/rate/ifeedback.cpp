@@ -12,6 +12,7 @@ IFeedback::IFeedback(QObject *parent)
 
 IFeedback::IFeedback(const QString &title, const QString &text, int rate, IPerson *person, QObject *parent)
   : IBaseSignalObject ( parent )
+  , _uid( ClientStorage::generateUuid() )
   , _title ( title )
   , _description ( text )
   , _rate ( rate )

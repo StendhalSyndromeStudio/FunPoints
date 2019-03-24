@@ -14,6 +14,7 @@ ILocalEvent::ILocalEvent(QObject *parent)
 
 ILocalEvent::ILocalEvent(const QString &name, const QString &desc, const QDateTime &start, const QDateTime &end, const QGeoCoordinate &pos, IUser *user, QObject *parent)
   : QObject ( parent )
+  , _uid ( ClientStorage::generateUuid() )
   , _name ( name )
   , _desc ( desc )
   , _pos ( pos )
