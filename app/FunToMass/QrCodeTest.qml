@@ -8,8 +8,7 @@ Rectangle {
     visible: true
 
     id : cameraUI
-    width: 640
-    height: 480
+    anchors.fill: parent
 
     color: "#000000"
 

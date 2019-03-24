@@ -63,6 +63,7 @@ ApplicationWindow {
         // QrCodeTest
         QrCodeTest {
             id:qrCodeId
+
             visible: false
             onExit: {
                 controlsButton.visible = true
@@ -467,15 +468,16 @@ virtual QGeoCoordinate location() const;
                 width: parent.width
                 anchors.top: detailsHead.bottom
                 anchors.bottom: parent.bottom
-                Column {
-                    spacing: 3
-                    Text { text : details.description; font.pointSize: 14 }
-                    WebView {
-                            id: webView
-                            anchors.fill: parent
-                            //url: 'https://www.youtube.com/'
-                            Component.onCompleted: {
+                Text { id: descr; text : details.description; font.pointSize: 14 }
+                WebView {
+                        id: webView
+                        width: detailsBody.width
+                        anchors.top: descr.bottom
+                        anchors.bottom: detailsBody.bottom
 
+                        //url: 'https://www.youtube.com/'
+                        Component.onCompleted: {
+                            //webView.url = 'qrc:/index.html';
                                 var resource = 'qrc:/index.html';
 
                                 var xhr = new XMLHttpRequest;
@@ -487,9 +489,8 @@ virtual QGeoCoordinate location() const;
                                     }
                                 };
                                 xhr.send();
-                            }
                         }
-                }
+                    }
             }
         }
     }
