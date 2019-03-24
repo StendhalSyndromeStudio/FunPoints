@@ -251,6 +251,7 @@ virtual QGeoCoordinate location() const;
                         Row {
                             spacing: 3
                             Image {
+                                anchors.fill: height
                                 source: "imgs/key.png"
                             }
                             Column {
