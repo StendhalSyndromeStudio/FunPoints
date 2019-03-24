@@ -280,7 +280,8 @@ Item {
 
     function updateAllPoi( ) {
         console.log( 'updateAllPoi' )
-        mapview.clearMapItems( )
+        //mapview.clearMapItems( )
+        //markerModel.clear( )
         for(var i = 0; i < FpCore.eventCount(); ++i) {
             var event = FpCore.eventAt( i );
             var coordinate = event.location( );
@@ -290,7 +291,7 @@ Item {
             markerModel.addMarker( coordinate, title  )
             //markerModel.title( title );
             //markerModel.selectPoint( coordinate )
-            mapview.update( )
         }
+        mapview.update( )
     }
 }

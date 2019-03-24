@@ -46,7 +46,7 @@ ApplicationWindow {
                 //console.log( type, hour, title )
                 if ( FpCore.user( ).canCreateEvent( ) ) {
                         var stor    = FpCore.user().createdEvents( );
-                        var event   = stor.create( type, title, newPoiCoord.latitude, newPoiCoord.longitude, FpCore.user() );
+                        var event   = stor.create( title, type, newPoiCoord.latitude, newPoiCoord.longitude, FpCore.user() );
                 }
                 //map.createNewPoi( newPoiCoord.latitude, newPoiCoord.longitude, type, hour, title )
             }

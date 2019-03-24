@@ -40,3 +40,9 @@ QString MarkerModel::time( ) const {
     last = last.addSecs( 3600 * m_coordinates.count( ) );
     return ( current.toString( "hh:mm" ) + "-" + last.toString( "hh:mm" ) );
 }
+
+void MarkerModel::clear( ) {
+    m_coordinates.clear( );
+    m_Titles.clear( );
+    _currentPoint = 0;
+}
