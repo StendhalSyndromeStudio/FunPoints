@@ -47,8 +47,6 @@ void FpClient::writeUpdates()
     doc[ "cmd" ] = "write";
     doc[ "data" ] = array;
     client->write( QJsonDocument ( doc ).toJson( ) );
-
-    qDebug() << "---Debug" ;
   }
 
   emit eventListChanged();
@@ -120,8 +118,8 @@ void FpClient::timerEvent(QTimerEvent *event)
 
     } else if ( cmd == "write" ) {
       auto array = json[ "data" ].toArray();
-//      ClientStorage::inst()->write( array );
-//      emit eventListChanged();
+      ClientStorage::inst()->write( array );
+      emit eventListChanged();
     }
   }
 }
