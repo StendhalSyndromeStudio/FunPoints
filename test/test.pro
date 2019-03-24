@@ -7,4 +7,5 @@ SUBDIRS += \
     TestCore \
     Example \
     RouteTest \
-    FilteringPageUi
+    FilteringPageUi \
+    QrCodeTest
