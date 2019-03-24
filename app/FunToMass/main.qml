@@ -202,7 +202,8 @@ virtual QGeoCoordinate location() const;
                   delegate:
                     Rectangle {
                         width: parent.width
-                        height: 70
+                        height: childrenRect.height
+
                         color: index % 2 == 0 ? "#dd3030" : "#dd3030"//"#aa3040"
                         radius: 10
                         Row {
