@@ -33,7 +33,10 @@ FpCore::FpCore(QObject *parent)
            this,    &FpCore::userChanged );
 
   connect( client,  &FpClient::eventListChanged,
-           this,    &FpCore::eventListChanged );
+           [this]() {
+    this->rebuildEventsList();
+    emit eventListChanged();
+  });
 
 
   client->initConnection();
