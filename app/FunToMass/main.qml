@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.3
 import com.fun.fpcore 1.0
 import "ComponentFactory.js" as Factory
 import QtPositioning 5.5
+import com.fun.fpcore 1.0
 
 ApplicationWindow {
     id: app
@@ -32,6 +33,8 @@ ApplicationWindow {
                 controlsButton.visible = false
                 eventParams.visible = true
                 app.newPoiCoord = QtPositioning.coordinate( x, y )
+
+
                 //console.log( 'xy', x, y )
             }
         }
@@ -41,7 +44,11 @@ ApplicationWindow {
             onCreateNewPoi: {
                 controlsButton.visible = true
                 //console.log( type, hour, title )
-                map.createNewPoi( newPoiCoord.latitude, newPoiCoord.longitude, type, hour, title )
+                if ( FpCore.user( ).canCreateEvent( ) ) {
+                        var stor    = FpCore.user().createdEvents( );
+                        var event   = stor.create( type, title, newPoiCoord.latitude, newPoiCoord.longitude, FpCore.user() );
+                }
+                //map.createNewPoi( newPoiCoord.latitude, newPoiCoord.longitude, type, hour, title )
             }
         }
         /////////////////////////////////
@@ -52,7 +59,16 @@ ApplicationWindow {
                 controlsButton.visible = true
             }
         }
+        // QrCodeTest
+        QrCodeTest {
+            id:qrCodeId
+            visible: false
+            onExit: {
+                controlsButton.visible = true
+            }
+        }
 
+        /////////////
         ControlButtons {
             id:controlsButton
             width: 70
@@ -66,6 +82,8 @@ ApplicationWindow {
             }
             onPayClick : {
                 console.log( 'pay instance' )
+                controlsButton.visible = false
+                qrCodeId.visible = true
             }
 
             onFilterClicked : {

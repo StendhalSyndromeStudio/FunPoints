@@ -238,9 +238,11 @@ Item {
         FpCore.onDisconnected.connect( connectedToServer );
         FpCore.onError.connect( coreError );
         FpCore.onMessage.connect( coreMessage );
-        updateLocation();
+        FpCore.onEventListChanged.connect( updateAllPoi )
+        updateLocation( );
 
         console.log( FpCore.eventCount() );
+        /*
         for(var i = 0; i < FpCore.eventCount(); ++i) {
             var event = FpCore.eventAt( i );
             var coordinate = event.location( );
@@ -250,9 +252,10 @@ Item {
             markerModel.addMarker( coordinate, title  )
             //markerModel.title( title );
             //markerModel.selectPoint( coordinate )
-
             mapview.update( )
         }
+        */
+        updateAllPoi( )
     }
 
     function updateLocation() {
@@ -273,5 +276,21 @@ Item {
 
     function coreMessage(message) {
         //logArea.add( qsTr( "Сообщение: %1" ).arg( message ) );
+    }
+
+    function updateAllPoi( ) {
+        console.log( 'updateAllPoi' )
+        mapview.clearMapItems( )
+        for(var i = 0; i < FpCore.eventCount(); ++i) {
+            var event = FpCore.eventAt( i );
+            var coordinate = event.location( );
+            //var timeSpan = event.timeSpending( ).span;
+            var title = event.name( );
+            console.log( "add point", title );
+            markerModel.addMarker( coordinate, title  )
+            //markerModel.title( title );
+            //markerModel.selectPoint( coordinate )
+            mapview.update( )
+        }
     }
 }

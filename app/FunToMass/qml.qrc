@@ -22,5 +22,6 @@
         <file>imgs/star5.png</file>
         <file>EventParams.qml</file>
         <file>FilterringPage.qml</file>
+        <file>QrCodeTest.qml</file>
     </qresource>
 </RCC>
