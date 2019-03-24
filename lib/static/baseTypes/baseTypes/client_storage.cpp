@@ -50,8 +50,7 @@ ClientStorage *ClientStorage::instance()
 
 QUuid ClientStorage::generateUuid()
 {
-  srand( static_cast<long>(  0 ) );
-
+  srand( static_cast<unsigned int>( QTime::currentTime().msecsSinceStartOfDay() ) );
   return QUuid (
         static_cast<uint>( std::rand() )
         , static_cast<ushort>( std::rand() )
