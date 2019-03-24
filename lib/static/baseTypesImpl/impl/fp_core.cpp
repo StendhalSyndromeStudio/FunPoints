@@ -33,7 +33,10 @@ FpCore::FpCore(QObject *parent)
            this,    &FpCore::userChanged );
 
   connect( client,  &FpClient::eventListChanged,
-           this,    &FpCore::eventListChanged );
+           [this]() {
+    this->rebuildEventsList();
+    emit eventListChanged();
+  });
 
 
   client->initConnection();
@@ -48,7 +51,7 @@ QList<ILocalEvent *> FpCore::createTestEventList()
 {
   QList<ILocalEvent *> result;
 
-  for ( int i = 0; i < 3; ++i )
+  for ( int i = 0; i < 0; ++i )
    result << new TestLocalEvent();
 
   return result;

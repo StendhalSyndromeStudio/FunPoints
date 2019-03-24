@@ -25,6 +25,11 @@ public slots:
   virtual ILocalEvent *eventAt(int index);
   virtual ILocalEvent *create(const QString &name
                               , const QString &desc
+                              , double lattitude
+                              , double logtitude
+                              , IUser *parent );
+  virtual ILocalEvent *create(const QString &name
+                              , const QString &desc
                               , const QDateTime &start
                               , const QDateTime &end
                               , const QGeoCoordinate &location

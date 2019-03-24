@@ -8,25 +8,25 @@
 
 ClientStorage::ClientStorage(QObject *parent) : QObject(parent)
 {
-//  auto u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ) );
-//  u->_lname = tr ( "Шарипов" );
-//  u->_fname = tr ( "Александр" );
-//  u->_mname = tr ( "Альфирович" );
+  auto u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ) );
+  u->_lname = tr ( "Шарипов" );
+  u->_fname = tr ( "Александр" );
+  u->_mname = tr ( "Альфирович" );
 
-//  u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ) );
-//  u->_lname = tr ( "Звягинцев" );
-//  u->_fname = tr ( "Александ" );
-//  u->_mname = tr ( "Владимирович" );
+  u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ) );
+  u->_lname = tr ( "Звягинцев" );
+  u->_fname = tr ( "Александ" );
+  u->_mname = tr ( "Владимирович" );
 
-//  u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3 ) );
-//  u->_lname = tr ( "Любимов" );
-//  u->_fname = tr ( "Владимир" );
-//  u->_mname = tr ( "Геннадьевич" );
+  u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3 ) );
+  u->_lname = tr ( "Любимов" );
+  u->_fname = tr ( "Владимир" );
+  u->_mname = tr ( "Геннадьевич" );
 
-//  u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 ) );
-//  u->_lname = tr ( "Зарубин" );
-//  u->_fname = tr ( "Михаил" );
-//  u->_mname = tr ( "Михайлович" );
+  u = user( QUuid ( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 ) );
+  u->_lname = tr ( "Зарубин" );
+  u->_fname = tr ( "Михаил" );
+  u->_mname = tr ( "Михайлович" );
 }
 
 ClientStorage::~ClientStorage()

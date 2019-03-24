@@ -46,6 +46,8 @@ void FpClient::writeUpdates()
     doc[ "data" ] = array;
     client->write( QJsonDocument ( doc ).toJson( ) );
   }
+
+  emit eventListChanged();
 }
 
 void FpClient::incommingMessage(const QByteArray &data)
@@ -61,6 +63,8 @@ void FpClient::incommingMessage(const QByteArray &data)
     ClientStorage::inst()->write( arr );
     user = ClientStorage::inst()->user( uid );
     emit userChanged();
+
+    writeUpdates();
   } else if ( cmd == "write" ) {
     auto array = json[ "data" ].toArray();
     ClientStorage::inst()->write( array );

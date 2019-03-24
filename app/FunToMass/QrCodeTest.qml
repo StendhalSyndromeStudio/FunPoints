@@ -4,15 +4,16 @@ import QtMultimedia 5.4
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 
-Window {
+Rectangle {
     visible: true
-    title: qsTr("Hello World")
 
     id : cameraUI
-    width: 720
-    height: 1280
+    width: 640
+    height: 480
 
     color: "#000000"
+
+    signal exit( )
 
     Camera {
         id: camera
@@ -109,6 +110,7 @@ Window {
 
                 onClicked: {
                     cameraUI.visible = false
+                    exit( )
                 }
             }
     }

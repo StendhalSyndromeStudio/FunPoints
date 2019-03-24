@@ -113,6 +113,7 @@ ApplicationWindow {
         FpCore.onUpdateLocation.connect( updateLocation );
         FpCore.onConnected.connect( connectedToServer );
         FpCore.onDisconnected.connect( disconnectedFromServer );
+        FpCore.onUserChanged.connect( userChanged );
         FpCore.onError.connect( coreError );
         FpCore.onMessage.connect( coreMessage );
         updateLocation();
@@ -136,6 +137,13 @@ ApplicationWindow {
 
     function disconnectedFromServer() {
         logArea.add( qsTr( "Отключен от сервера" ) );
+    }
+
+    function userChanged() {
+        if ( FpCore.user().canCreateEvent() ) {
+            var stor    = FpCore.user().createdEvents();
+            var event   = stor.create( "Event 1", "New event", 0.0, 0.0, FpCore.user() );
+        }
     }
 
     function coreError(code, message) {

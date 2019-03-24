@@ -62,7 +62,7 @@ TestLocalEvent::TestLocalEvent(QObject *parent)
   : ILocalEvent ( parent)
 {
   static int index = 0;
-  if ( index > testList.count() )
+  if ( index >= testList.count() )
     index = 0;
 
   auto info = testList[ index++ ];

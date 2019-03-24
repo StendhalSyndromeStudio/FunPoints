@@ -1,5 +1,7 @@
 #include "ievent_storage.h"
 
+#include <ClientStorage>
+
 IEventStorage::IEventStorage(QObject *parent)
   : IBaseSignalObject(parent)
 {
@@ -58,10 +60,21 @@ ILocalEvent *IEventStorage::eventAt(int index)
   return allEvents[ index ];
 }
 
+ILocalEvent *IEventStorage::create(const QString &name, const QString &desc, double lattitude, double logtitude, IUser *parent)
+{
+  return create( name
+                 , desc
+                 , QDateTime::currentDateTime()
+                 , QDateTime::currentDateTime().addSecs( 3600 )
+                 , QGeoCoordinate ( lattitude, logtitude )
+                 , parent );
+}
+
 ILocalEvent *IEventStorage::create(const QString &name, const QString &desc, const QDateTime &start, const QDateTime &end, const QGeoCoordinate &pos, IUser *parent)
 {
   auto event = new ILocalEvent( name, desc, start, end, pos, parent, this );
   addEvent( event );
+  ClientStorage::inst()->addedEvent( event );
 
   return event;
 }

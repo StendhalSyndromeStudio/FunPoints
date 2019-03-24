@@ -9,7 +9,7 @@ TcpClient::TcpClient(QObject *parent)
   , port ( 80 )
   , reconnect ( false )
 {
-  startTimer( 2000 );
+  startTimer( 500 );
   connectSocket();
 }
 
@@ -36,7 +36,7 @@ void TcpClient::timerEvent(QTimerEvent *)
         _socket->close();
       }
     } else {
-      if ( lastTryConnect.msecsTo( QDateTime::currentDateTime() ) > 5500 ) {
+      if ( lastTryConnect.msecsTo( QDateTime::currentDateTime() ) > 3500 ) {
         connectToHost( address, port );
       }
     }

@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.3
 import com.fun.fpcore 1.0
 import "ComponentFactory.js" as Factory
 import QtPositioning 5.5
+import com.fun.fpcore 1.0
 
 ApplicationWindow {
     id: app
@@ -13,14 +14,63 @@ ApplicationWindow {
     height: 480
     title: qsTr("Развлечения в массы")
 
+    property variant newPoiCoord: QtPositioning.coordinate( 0, 0 )
+
     Item {
         anchors.fill: parent
         MapLeningrad {
-        //MapDummy {
             id: map
         }
+        // создание новой poi
+        EventParams {
+            id: eventParams
+            visible: false
+        }
 
+        Connections {
+            target: map
+            onInvokeEventParams: {
+                controlsButton.visible = false
+                eventParams.visible = true
+                app.newPoiCoord = QtPositioning.coordinate( x, y )
+
+
+                //console.log( 'xy', x, y )
+            }
+        }
+
+        Connections {
+            target: eventParams
+            onCreateNewPoi: {
+                controlsButton.visible = true
+                //console.log( type, hour, title )
+                if ( FpCore.user( ).canCreateEvent( ) ) {
+                        var stor    = FpCore.user().createdEvents( );
+                        var event   = stor.create( title, type, newPoiCoord.latitude, newPoiCoord.longitude, FpCore.user() );
+                }
+                //map.createNewPoi( newPoiCoord.latitude, newPoiCoord.longitude, type, hour, title )
+            }
+        }
+        /////////////////////////////////
+        FilterringPage {
+            id:filterringPage
+            visible: false
+            onAccept: {
+                controlsButton.visible = true
+            }
+        }
+        // QrCodeTest
+        QrCodeTest {
+            id:qrCodeId
+            visible: false
+            onExit: {
+                controlsButton.visible = true
+            }
+        }
+
+        /////////////
         ControlButtons {
+            id:controlsButton
             width: 70
             height: 300//contentItem.height
             anchors.right: map.right
@@ -29,6 +79,17 @@ ApplicationWindow {
             anchors.rightMargin: 20
             onListEventsClicked : {
                 eventsList.state = "half";
+            }
+            onPayClick : {
+                console.log( 'pay instance' )
+                controlsButton.visible = false
+                qrCodeId.visible = true
+            }
+
+            onFilterClicked : {
+                console.log( 'filter instance' )
+                controlsButton.visible = false
+                filterringPage.visible = true
             }
         }
         Item {
@@ -232,16 +293,17 @@ virtual QGeoCoordinate location() const;
 
 */
 
-
                   delegate:
                     Rectangle {
                         width: parent.width
-                        height: 70
+                        height: childrenRect.height
+
                         color: index % 2 == 0 ? "#dd3030" : "#dd3030"//"#aa3040"
                         radius: 10
                         Row {
                             spacing: 3
                             Image {
+                                anchors.fill: height
                                 source: "imgs/key.png"
                             }
                             Column {
@@ -268,8 +330,6 @@ virtual QGeoCoordinate location() const;
                         }
                     }
                 }
-
-
             }
             MinMaxButtons {
                 id: minMaxButtons

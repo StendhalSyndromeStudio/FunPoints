@@ -14,11 +14,13 @@ public:
 
     Q_INVOKABLE void addMarker( const QGeoCoordinate &coordinate, const QString &title = "Концерт №", QDateTime start = QDateTime::currentDateTime( ), QDateTime end = QDateTime::currentDateTime( ) ) {
         beginInsertRows( QModelIndex( ), rowCount( ), rowCount( ) );
-        m_Titles[ coordinate.toString( ) ] = title;
-        //_title = title;
-        _startEvent = start;
-        _endEvent = end;
-        m_coordinates.append( coordinate );
+        if ( !m_Titles.contains( coordinate.toString( ) ) ) {
+            m_Titles[ coordinate.toString( ) ] = title;
+            //_title = title;
+            _startEvent = start;
+            _endEvent = end;
+            m_coordinates.append( coordinate );
+        }
         endInsertRows( );
     }
 
@@ -48,6 +50,8 @@ public slots:
     QString title( const QGeoCoordinate &coordinate ) const;
     void title( QString v );
     QString time( ) const;
+
+    void clear( );
 private:
     QList<QGeoCoordinate> m_coordinates;
     QMap<QString, QString> m_Titles;
