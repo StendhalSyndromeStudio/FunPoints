@@ -146,6 +146,7 @@ Item {
                 coordinate: typeof position !== "undefined" && position ? position : locationLeningrad
                 anchorPoint.x: 25
                 anchorPoint.y: 53
+                visible: marker.coordinate !== locationLeningrad
                 sourceItem: PointOfInterest {
                     id:concretePoi
                     title: markerModel.title( marker.coordinate );
@@ -280,7 +281,7 @@ Item {
     }
 
     function updateAllPoi( ) {
-        console.log( 'updateAllPoi' )
+        console.log( 'updateAllPoi', FpCore.eventCount() )
         //mapview.clearMapItems( )
         //markerModel.clear( )
         for(var i = 0; i < FpCore.eventCount(); ++i) {
@@ -288,7 +289,7 @@ Item {
             var coordinate = event.location( );
             //var timeSpan = event.timeSpending( ).span;
             var title = event.name( );
-            console.log( "add point", title );
+            console.log( "add point", title, coordinate );
             markerModel.addMarker( coordinate, title  )
             //markerModel.title( title );
             //markerModel.selectPoint( coordinate )
