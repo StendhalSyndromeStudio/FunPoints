@@ -1,5 +1,5 @@
 QT += quick
-QT += location positioning quickcontrols2
+QT += location positioning quickcontrols2 webview
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use

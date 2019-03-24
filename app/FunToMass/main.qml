@@ -6,6 +6,7 @@ import com.fun.fpcore 1.0
 import "ComponentFactory.js" as Factory
 import QtPositioning 5.5
 import com.fun.fpcore 1.0
+import QtWebView 1.1
 
 ApplicationWindow {
     id: app
@@ -90,6 +91,9 @@ ApplicationWindow {
                 console.log( 'filter instance' )
                 controlsButton.visible = false
                 filterringPage.visible = true
+            }
+            onLocationClicked: {
+                map.propCenter = map.locationLeningrad;
             }
         }
         Item {
@@ -235,7 +239,10 @@ virtual QGeoCoordinate location() const;
 
                 id: eventsModel
                 Component.onCompleted: {
+                    //var flag = false;
                     function update () {
+                        //if(flag) return;
+                        //flag = true;
                         eventsModel.clear();
                         for(var idx = 0; idx < FpCore.eventCount(); ++idx){
                             var event = FpCore.eventAt( idx );
@@ -246,7 +253,7 @@ virtual QGeoCoordinate location() const;
                             listElem.description = event.description( );
                             listElem.organizer = event.organizer( );
                             listElem.organizerString = organizerToString(listElem.organizer);
-                            listElem.rate = (event.rate( ) || {}).rate( ) || 0; //да, именно 2 раза
+                            listElem.rate = (event.rate( ) || {rate : function(){}}).rate( ) || 0; //да, именно 2 раза
                             listElem.rateString = rateToString(listElem.rate);
                             listElem.rateImgUrl = rateToImageUrl(listElem.rate);
                             listElem.start = event.start( );
@@ -258,6 +265,7 @@ virtual QGeoCoordinate location() const;
                             eventsModel.insert(idx,listElem);
 
                         }
+                        //flag = false;
                     }
 
                     update();
@@ -462,6 +470,25 @@ virtual QGeoCoordinate location() const;
                 Column {
                     spacing: 3
                     Text { text : details.description; font.pointSize: 14 }
+                    WebView {
+                            id: webView
+                            anchors.fill: parent
+                            //url: 'https://www.youtube.com/'
+                            Component.onCompleted: {
+
+                                var resource = 'qrc:/index.html';
+
+                                var xhr = new XMLHttpRequest;
+                                xhr.open('GET', resource);
+                                xhr.onreadystatechange = function() {
+                                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                                        var response = xhr.responseText;
+                                        webView.loadHtml(response);
+                                    }
+                                };
+                                xhr.send();
+                            }
+                        }
                 }
             }
         }

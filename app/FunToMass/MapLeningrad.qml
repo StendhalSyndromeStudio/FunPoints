@@ -20,6 +20,7 @@ Item {
     property real myY: 30.291263
 
     property alias propMarkerModel: markerModel
+    property alias propCenter: mapview.center
 
     property variant locationLeningrad: QtPositioning.coordinate( myX, myY )
 

@@ -5,8 +5,7 @@ import QtQuick.Layouts 1.12
 
 Rectangle {
     visible: true
-    width: 640
-    height: 480
+    anchors.fill: parent
     id:filterringPage
 
     signal accept( )
