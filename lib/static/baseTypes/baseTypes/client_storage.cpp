@@ -67,11 +67,12 @@ QUuid ClientStorage::generateUuid()
 IUser *ClientStorage::user(const QUuid &uid)
 {
   if ( !allUsers.contains( uid ) ) {
-    auto user = new IUser();
+    auto user = new IUser( this );
     user->_uid = uid;
     allUsers[ uid ] = user;
 
     emit addedUser( user );
+    return user;
   }
 
   return allUsers[ uid ];
