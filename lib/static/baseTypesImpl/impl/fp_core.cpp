@@ -35,7 +35,6 @@ FpCore::FpCore(QObject *parent)
   connect( client,  &FpClient::eventListChanged,
            [this]() {
     this->rebuildEventsList();
-    emit eventListChanged();
   });
 
 
@@ -65,6 +64,9 @@ void FpCore::rebuildEventsList()
     for ( auto e: c->createdEvents()->allEvents )
       allEvents << e;
   }
+
+  emit eventListChanged();
+  emit objectListChanged();
 }
 
 bool FpCore::isConnected() const

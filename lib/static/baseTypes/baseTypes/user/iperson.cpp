@@ -2,7 +2,7 @@
 
 IPerson::IPerson(QObject *parent)
   : QObject ( parent)
-  , _rate ( new IRateObject () )
+  , _rate ( new IRateObject ( this ) )
 {
 
 }
@@ -13,6 +13,7 @@ IPerson::IPerson(const QUuid &uid, const QString &f, const QString &l, const QSt
   , _fname ( f )
   , _lname ( l )
   , _mname ( m )
+  , _rate ( new IRateObject ( this ) )
 {
 
 }

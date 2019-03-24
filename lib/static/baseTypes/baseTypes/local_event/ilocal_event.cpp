@@ -1,13 +1,14 @@
 #include "ilocal_event.h"
 
 #include <IUser>
+#include <QDebug>
 #include <QVariant>
 #include <ClientStorage>
 
 ILocalEvent::ILocalEvent(QObject *parent)
   : QObject(parent)
   , _user ( nullptr )
-  , _rate ( new IRateObject() )
+  , _rate ( new IRateObject( this ) )
 {
 
 }
@@ -19,7 +20,7 @@ ILocalEvent::ILocalEvent(const QString &name, const QString &desc, const QDateTi
   , _desc ( desc )
   , _pos ( pos )
   , _user ( user )
-  , _rate ( new IRateObject() )
+  , _rate ( new IRateObject( this ) )
 {
   _time.span.start  = start;
   _time.span.end    = end;
@@ -27,7 +28,7 @@ ILocalEvent::ILocalEvent(const QString &name, const QString &desc, const QDateTi
 
 ILocalEvent::~ILocalEvent()
 {
-
+  qDebug() << "Removed event" << uid() << parent();
 }
 
 IRateObject *ILocalEvent::rate() const
@@ -68,7 +69,9 @@ void ILocalEvent::fromJson(const QJsonObject &obj)
 
   auto userUid = obj[ "user" ].toString();
   _user = ClientStorage::inst()->user( userUid );
-  _rate->fromJson( obj[ "rate" ].toObject() );
+
+  auto data = obj[ "rate" ].toObject();
+  _rate->fromJson( data );
 }
 
 QUuid ILocalEvent::uid() const

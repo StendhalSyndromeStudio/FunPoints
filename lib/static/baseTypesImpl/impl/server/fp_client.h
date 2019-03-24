@@ -10,8 +10,9 @@ class FpClient
     : public IBaseSignalObject
 {
   Q_OBJECT
-  IUser       *user;
-  TcpClient   *client;
+  IUser             *user;
+  TcpClient         *client;
+  QList<QByteArray> inputBuffer;
 public:
   explicit FpClient(QObject *parent = nullptr);
   ~FpClient() override;
@@ -42,6 +43,9 @@ signals:
 private slots:
   void connectedToHost();
   void disconnectedFromHost();
+
+protected:
+  void timerEvent(QTimerEvent *event) override;
 };
 
 #endif // FP_CLIENT_H

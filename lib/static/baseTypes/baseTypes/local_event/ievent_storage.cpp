@@ -82,6 +82,7 @@ ILocalEvent *IEventStorage::create(const QString &name, const QString &desc, con
 bool IEventStorage::addEvent(ILocalEvent *event)
 {
   allEvents << event;
+  event->setParent( this );
   emit addedEvent( event );
 
   return true;
