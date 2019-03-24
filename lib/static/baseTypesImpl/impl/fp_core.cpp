@@ -51,7 +51,7 @@ QList<ILocalEvent *> FpCore::createTestEventList()
 {
   QList<ILocalEvent *> result;
 
-  for ( int i = 0; i < 3; ++i )
+  for ( int i = 0; i < 0; ++i )
    result << new TestLocalEvent();
 
   return result;

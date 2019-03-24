@@ -73,8 +73,8 @@ ILocalEvent *IEventStorage::create(const QString &name, const QString &desc, dou
 ILocalEvent *IEventStorage::create(const QString &name, const QString &desc, const QDateTime &start, const QDateTime &end, const QGeoCoordinate &pos, IUser *parent)
 {
   auto event = new ILocalEvent( name, desc, start, end, pos, parent, this );
-  ClientStorage::inst()->addedEvent( event );
   addEvent( event );
+  ClientStorage::inst()->addedEvent( event );
 
   return event;
 }
