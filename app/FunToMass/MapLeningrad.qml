@@ -29,6 +29,18 @@ Item {
 //    height: 1280
     anchors.fill: parent;
 
+    function tryInvokeEventParams( x, y ) {
+        invokeEventParams( x, y )
+    }
+
+    signal invokeEventParams( real x, real y )
+
+    function createNewPoi( x, y, type, hour, title ) {
+        var point = QtPositioning.coordinate( x, y )
+
+        markerModel.addMarker( point, title )
+    }
+
     Connections {
         target: markerModel
         onChangeData: {
@@ -98,12 +110,14 @@ Item {
             //TODO: запоминать, и использовать при нажатии кнопки добавить (+)
             onPressAndHold:  {
                 var coordinate = mapview.toCoordinate( Qt.point( mouse.x,mouse.y ) )
-                console.log( "setMarker:", coordinate );
-                markerModel.addMarker( coordinate )
+                //console.log( "setMarker:", coordinate );
+                //markerModel.addMarker( coordinate )
 
                 //markerModel.selectPoint( coordinate )
 
                 mapview.update( )
+
+                app.tryInvokeEventParams( coordinate.latitude, coordinate.longitude )
             }
         }
         // моя позиция
@@ -214,6 +228,7 @@ Item {
             routeModel.update( )
             */
         }
+        visible: false
     }
 
     Component.onCompleted: {

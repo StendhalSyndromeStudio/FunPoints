@@ -29,7 +29,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES +=
+DISTFILES += \
+    FilterringPage.qml
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/MarkerModel/release/ -lMarkerModel
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib/static/MarkerModel/debug/ -lMarkerModel

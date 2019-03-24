@@ -13,14 +13,48 @@ ApplicationWindow {
     height: 480
     title: qsTr("Развлечения в массы")
 
+    property variant newPoiCoord: QtPositioning.coordinate( 0, 0 )
+
     Item {
         anchors.fill: parent
         MapLeningrad {
-        //MapDummy {
             id: map
+        }
+        // создание новой poi
+        EventParams {
+            id: eventParams
+            visible: false
+        }
+
+        Connections {
+            target: map
+            onInvokeEventParams: {
+                controlsButton.visible = false
+                eventParams.visible = true
+                app.newPoiCoord = QtPositioning.coordinate( x, y )
+                //console.log( 'xy', x, y )
+            }
+        }
+
+        Connections {
+            target: eventParams
+            onCreateNewPoi: {
+                controlsButton.visible = true
+                //console.log( type, hour, title )
+                map.createNewPoi( newPoiCoord.latitude, newPoiCoord.longitude, type, hour, title )
+            }
+        }
+        /////////////////////////////////
+        FilterringPage {
+            id:filterringPage
+            visible: false
+            onAccept: {
+                controlsButton.visible = true
+            }
         }
 
         ControlButtons {
+            id:controlsButton
             width: 70
             height: 300//contentItem.height
             anchors.right: map.right
@@ -29,6 +63,15 @@ ApplicationWindow {
             anchors.rightMargin: 20
             onListEventsClicked : {
                 eventsList.state = "half";
+            }
+            onPayClick : {
+                console.log( 'pay instance' )
+            }
+
+            onFilterClicked : {
+                console.log( 'filter instance' )
+                controlsButton.visible = false
+                filterringPage.visible = true
             }
         }
         Item {
@@ -198,7 +241,6 @@ virtual QGeoCoordinate location() const;
 
 */
 
-
                   delegate:
                     Rectangle {
                         width: parent.width
@@ -235,8 +277,6 @@ virtual QGeoCoordinate location() const;
                         }
                     }
                 }
-
-
             }
             MinMaxButtons {
                 id: minMaxButtons
