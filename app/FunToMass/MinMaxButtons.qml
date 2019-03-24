@@ -16,23 +16,31 @@ Item {
             anchors.fill: parent
             ControlButton {
                 id: maximize
-                text: "^"
+                //text: "^"
 //                signal click();
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.width
                 Layout.topMargin: 0
                 Layout.bottomMargin: 0
                 onClicked: main.maximizeClicked()
+                Image {
+                    anchors.fill: parent
+                    source: "imgs/arrow_up.png"
+                }
             }
             ControlButton{
                 id: minimize
-                text: "v"
+                //text: "v"
 //                signal click();
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.width
                 Layout.topMargin: 0
                 Layout.bottomMargin: 0
                 onClicked: main.minimizeClicked()
+                Image {
+                    anchors.fill: parent
+                    source: "imgs/arrow_down.png"
+                }
             }
         }
     }

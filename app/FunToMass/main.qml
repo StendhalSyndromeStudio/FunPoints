@@ -309,7 +309,7 @@ virtual QGeoCoordinate location() const;
                         width: parent.width
                         height: childrenRect.height
 
-                        color: index % 2 == 0 ? "#dd3030" : "#dd3030"//"#aa3040"
+                        color: index % 2 == 0 ? "#ccb0a0" : "#cfbfaf"//"#aa3040"
                         radius: 10
                         Row {
                             spacing: 3
@@ -319,12 +319,12 @@ virtual QGeoCoordinate location() const;
                             }
                             Column {
                                 spacing: 3
-                                Text { text : name; font.pointSize: 14 }
-                                Text { text : startFormatted + " - " + endFormatted; font.pointSize: 10 }
-                                Text { text : address; font.pointSize: 12 }
+                                Text { text : name; font.pointSize: 20 }
+                                Text { text : startFormatted + " - " + endFormatted; font.pointSize: 16 }
+                                Text { text : address; font.pointSize: 18 }
                                 Row {
                                     Image { source : "imgs/"+rateImgUrl }
-                                    Text { text : organizerString; font.pointSize: 14 }
+                                    Text { text : organizerString; font.pointSize: 20 }
                                 }
                                 //Text { text : "Организатор *****" }
                             }
@@ -434,7 +434,7 @@ virtual QGeoCoordinate location() const;
                 id: detailsHead
                 width: parent.width
                 height: 70
-                color: "#dd3030"
+                color: "#ccb0a0"//"#dd3030"
                 radius: 10
                 Row {
                     spacing: 3
@@ -443,12 +443,12 @@ virtual QGeoCoordinate location() const;
                     }
                     Column {
                         spacing: 3
-                        Text { text : details.name; font.pointSize: 14 }
-                        Text { text : details.startFormatted + " - " + details.endFormatted; font.pointSize: 10 }
-                        Text { text : details.address; font.pointSize: 12 }
+                        Text { text : details.name; font.pointSize: 20 }
+                        Text { text : details.startFormatted + " - " + details.endFormatted; font.pointSize: 16 }
+                        Text { text : details.address; font.pointSize: 18 }
                         Row {
                             Image { source : "imgs/"+details.rateImgUrl }
-                            Text { text : details.organizerString; font.pointSize: 14 }
+                            Text { text : details.organizerString; font.pointSize: 20 }
                         }
                         //Text { text : "Организатор *****" }
                     }
