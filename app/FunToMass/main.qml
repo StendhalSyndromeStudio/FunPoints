@@ -85,10 +85,40 @@ virtual QGeoCoordinate location() const;
 
             ListModel {
                 signal askRoute(double latitude, double longitude)
-                signal askDetails(double latitude, double longitude)
+                signal askDetails(double latitude, double longitude, int index)
 
                 onAskRoute: {
                     map.propMarkerModel.selectPoint(QtPositioning.coordinate( latitude, longitude ));
+                }
+
+                onAskDetails: {
+                    eventsList.state = "details";
+                    console.log("details");
+                    details.coordinate =QtPositioning.coordinate( latitude, longitude );
+                    var item = eventsModel.get(index);
+                    details.name = item.name;
+                    console.log(details.name);
+                    details.address = item.address;
+                    details.description = item.description;
+                    details.organizerString = item.organizerString;
+                    details.rateImgUrl = item.rateImgUrl;
+                    details.startFormatted = item.startFormatted;
+                    details.endFormatted = item.endFormatted;
+
+
+
+                    /*
+            property string name: ""
+            property variant coordinate: QtPositioning.coordinate( 0, 0 )
+            property string address: ""
+            property string description: ""
+            property string organizerString: ""
+            //property double rate: ""
+            //property string rateString: ""
+            property string rateImgUrl: ""
+            property string startFormatted: ""
+            property string endFormatted: ""
+*/
                 }
 
                 function organizerToString(value){
@@ -144,29 +174,33 @@ virtual QGeoCoordinate location() const;
 
                 id: eventsModel
                 Component.onCompleted: {
+                    function update () {
+                        eventsModel.clear();
+                        for(var idx = 0; idx < FpCore.eventCount(); ++idx){
+                            var event = FpCore.eventAt( idx );
+                            var listElem = {};
+                            listElem.name = event.name( );
+                            listElem.coordinate = event.location( );
+                            listElem.address = coordinateToStringAddress(listElem.coordinate);
+                            listElem.description = event.description( );
+                            listElem.organizer = event.organizer( );
+                            listElem.organizerString = organizerToString(listElem.organizer);
+                            listElem.rate = (event.rate( ) || {}).rate( ) || 0; //да, именно 2 раза
+                            listElem.rateString = rateToString(listElem.rate);
+                            listElem.rateImgUrl = rateToImageUrl(listElem.rate);
+                            listElem.start = event.start( );
+                            listElem.end = event.end( );
+                            listElem.startFormatted = formatDate( listElem.start );
+                            listElem.endFormatted = formatDate( listElem.end );
+                            console.log(listElem);
 
+                            eventsModel.insert(idx,listElem);
 
-                    for(var idx = 0; idx < FpCore.eventCount(); ++idx){
-                        var event = FpCore.eventAt( idx );
-                        var listElem = {};
-                        listElem.name = event.name( );
-                        listElem.coordinate = event.location( );
-                        listElem.address = coordinateToStringAddress(listElem.coordinate);
-                        listElem.description = event.description( );
-                        listElem.organizer = event.organizer( );
-                        listElem.organizerString = organizerToString(listElem.organizer);
-                        listElem.rate = (event.rate( ) || {}).rate( ) || 0; //да, именно 2 раза
-                        listElem.rateString = rateToString(listElem.rate);
-                        listElem.rateImgUrl = rateToImageUrl(listElem.rate);
-                        listElem.start = event.start( );
-                        listElem.end = event.end( );
-                        listElem.startFormatted = formatDate( listElem.start );
-                        listElem.endFormatted = formatDate( listElem.end );
-                        console.log(listElem);
-
-                        eventsModel.insert(idx,listElem);
-
+                        }
                     }
+
+                    update();
+                    FpCore.onEventListChanged.connect(update);
                 }
             }
 
@@ -229,7 +263,7 @@ virtual QGeoCoordinate location() const;
                                 console.log(coordinate.latitude + " " + coordinate.longitude);
                             }
                             onPressAndHold: {
-                                eventsModel.askDetails(coordinate.latitude,coordinate.longitude);
+                                eventsModel.askDetails(coordinate.latitude,coordinate.longitude, index);
                             }
                         }
                     }
@@ -262,21 +296,114 @@ virtual QGeoCoordinate location() const;
 
             }
 
+
+
+
+
             states: [
                 State {
                     name: "minimized"
                     PropertyChanges { target: eventsList; height: 100; visible: false }
+                    PropertyChanges { target: details; visible: false }
                 },
                 State {
                     name: "maximized"
                     PropertyChanges { target: eventsList; height: eventsList.parent.height }
+                    PropertyChanges { target: details; visible: false }
                 },
                 State {
                     name: "half"
                     PropertyChanges { target: eventsList; height: eventsList.parent.height / 2 }
+                    PropertyChanges { target: details; visible: false }
+                },
+                State {
+                    name: "details"
+                    PropertyChanges { target: details; visible: true }
+                    PropertyChanges { target: eventsList; height: 100; visible: false }
+
                 }
             ]
             state: "minimized"
+        }
+        Rectangle {
+            id: details
+            anchors.fill: parent
+
+            property string name: ""
+            property variant coordinate: QtPositioning.coordinate( 0, 0 )
+            property string address: ""
+            property string description: ""
+            property string organizerString: ""
+            //property double rate: ""
+            //property string rateString: ""
+            property string rateImgUrl: ""
+            property string startFormatted: ""
+            property string endFormatted: ""
+
+
+
+            /*
+                    listElem.name = event.name( );
+                    listElem.coordinate = event.location( );
+                    listElem.address = coordinateToStringAddress(listElem.coordinate);
+                    listElem.description = event.description( );
+                    listElem.organizer = event.organizer( );
+                    listElem.organizerString = organizerToString(listElem.organizer);
+                    listElem.rate = (event.rate( ) || {}).rate( ) || 0; //да, именно 2 раза
+                    listElem.rateString = rateToString(listElem.rate);
+                    listElem.rateImgUrl = rateToImageUrl(listElem.rate);
+                    listElem.start = event.start( );
+                    listElem.end = event.end( );
+                    listElem.startFormatted = formatDate( listElem.start );
+                    listElem.endFormatted = formatDate( listElem.end );
+
+*/
+
+            Rectangle {
+                id: detailsHead
+                width: parent.width
+                height: 70
+                color: "#dd3030"
+                radius: 10
+                Row {
+                    spacing: 3
+                    Image {
+                        source: "imgs/key.png"
+                    }
+                    Column {
+                        spacing: 3
+                        Text { text : details.name; font.pointSize: 14 }
+                        Text { text : details.startFormatted + " - " + details.endFormatted; font.pointSize: 10 }
+                        Text { text : details.address; font.pointSize: 12 }
+                        Row {
+                            Image { source : "imgs/"+details.rateImgUrl }
+                            Text { text : details.organizerString; font.pointSize: 14 }
+                        }
+                        //Text { text : "Организатор *****" }
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        eventsList.state = "minimized";
+                        //eventsModel.askRoute(coordinate.latitude,coordinate.longitude);
+                        console.log(details.coordinate.latitude + " " + details.coordinate.longitude);
+                    }
+                    onPressAndHold: {
+                        //eventsModel.askDetails(coordinate.latitude,coordinate.longitude);
+                    }
+                }
+            }
+            Rectangle {
+                id: detailsBody
+                width: parent.width
+                anchors.top: detailsHead.bottom
+                anchors.bottom: parent.bottom
+                Column {
+                    spacing: 3
+                    Text { text : details.description; font.pointSize: 14 }
+                }
+            }
         }
     }
 }
