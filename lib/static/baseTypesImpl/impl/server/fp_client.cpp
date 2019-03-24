@@ -61,6 +61,8 @@ void FpClient::incommingMessage(const QByteArray &data)
     ClientStorage::inst()->write( arr );
     user = ClientStorage::inst()->user( uid );
     emit userChanged();
+
+    writeUpdates();
   } else if ( cmd == "write" ) {
     auto array = json[ "data" ].toArray();
     ClientStorage::inst()->write( array );
