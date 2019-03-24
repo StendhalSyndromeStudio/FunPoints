@@ -26,11 +26,13 @@ FpClient::FpClient(QObject *parent)
            this,  &FpClient::writeUpdates );
   connect( cli,   &ClientStorage::changedFeedback,
            this,  &FpClient::writeUpdates );
+
+  startTimer( 500 );
 }
 
 FpClient::~FpClient()
 {
-
+  qDebug() << "delete fp client";
 }
 
 void FpClient::writeUpdates()
@@ -45,6 +47,8 @@ void FpClient::writeUpdates()
     doc[ "cmd" ] = "write";
     doc[ "data" ] = array;
     client->write( QJsonDocument ( doc ).toJson( ) );
+
+    qDebug() << "---Debug" ;
   }
 
   emit eventListChanged();
@@ -52,24 +56,7 @@ void FpClient::writeUpdates()
 
 void FpClient::incommingMessage(const QByteArray &data)
 {
-  auto json = QJsonDocument::fromJson( data );
-  auto cmd = json[ "cmd" ].toString();
-  auto buf = json[ "data" ].toObject();
-
-  if ( cmd == "write_user" ) {
-    auto uid = buf[ "uid" ].toString();
-    QJsonArray arr;
-    arr.append( buf );
-    ClientStorage::inst()->write( arr );
-    user = ClientStorage::inst()->user( uid );
-    emit userChanged();
-
-    writeUpdates();
-  } else if ( cmd == "write" ) {
-    auto array = json[ "data" ].toArray();
-    ClientStorage::inst()->write( array );
-    emit eventListChanged();
-  }
+  inputBuffer.append( data );
 }
 
 bool FpClient::isConnected() const
@@ -109,4 +96,32 @@ void FpClient::connectedToHost()
 void FpClient::disconnectedFromHost()
 {
   emit disconnected();
+}
+
+void FpClient::timerEvent(QTimerEvent *event)
+{
+  Q_UNUSED( event );
+
+  while ( !inputBuffer.isEmpty() ) {
+    auto data = inputBuffer.takeFirst();
+
+    auto json = QJsonDocument::fromJson( data );
+    auto cmd = json[ "cmd" ].toString();
+    auto buf = json[ "data" ].toObject();
+
+    if ( cmd == "write_user" ) {
+      auto uid = buf[ "uid" ].toString();
+      QJsonArray arr;
+      arr.append( buf );
+      ClientStorage::inst()->write( arr );
+      user = ClientStorage::inst()->user( uid );
+      emit userChanged();
+
+
+    } else if ( cmd == "write" ) {
+      auto array = json[ "data" ].toArray();
+//      ClientStorage::inst()->write( array );
+//      emit eventListChanged();
+    }
+  }
 }

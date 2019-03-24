@@ -64,10 +64,12 @@ void FpCoreProvider::regCoreTypes()
 
 QObject *FpCoreProvider::singletonProvider(QQmlEngine *, QJSEngine *)
 {
-  static IFpCore *core = nullptr;
-  if ( !core )
-    core = new FpCore();
+//  static IFpCore *core = nullptr;
+//  if ( !core )
+//    core = new FpCore();
 
-  qDebug() << "return " << core;
-  return core;
+//  qDebug() << "return " << core;
+//  return core;
+
+  return new FpCore();
 }

@@ -130,6 +130,8 @@ void FpServer::writeUpdates(const QList<FpServerClient *> &clients)
   auto out = QJsonDocument ( data ).toJson();
   for ( auto &c: clients )
     c->client->write( out );
+
+  qDebug() << "Write to clients";
 }
 
 void FpServer::writeClients(const QList<FpServerClient *> &)

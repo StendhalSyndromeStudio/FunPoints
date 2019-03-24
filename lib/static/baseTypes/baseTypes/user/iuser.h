@@ -15,6 +15,10 @@ public:
   explicit IUser(QObject *parent = nullptr);
   virtual ~IUser() override;
 
+public:
+  virtual QJsonObject toJson() const override;
+  virtual void fromJson(const QJsonObject &obj) override;
+
 public slots:
   ///
   /// \brief Может ли пользователь создать событие

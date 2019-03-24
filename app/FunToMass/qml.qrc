@@ -23,5 +23,10 @@
         <file>EventParams.qml</file>
         <file>FilterringPage.qml</file>
         <file>QrCodeTest.qml</file>
+        <file>imgs/events.png</file>
+        <file>imgs/filter.png</file>
+        <file>imgs/location.png</file>
+        <file>imgs/donate.png</file>
+        <file>index.html</file>
     </qresource>
 </RCC>
