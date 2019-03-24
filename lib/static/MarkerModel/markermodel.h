@@ -13,15 +13,15 @@ public:
     enum MarkerRoles{ positionRole = Qt::UserRole + 1 };
 
     Q_INVOKABLE void addMarker( const QGeoCoordinate &coordinate, const QString &title = "Концерт №", QDateTime start = QDateTime::currentDateTime( ), QDateTime end = QDateTime::currentDateTime( ) ) {
-        beginInsertRows( QModelIndex( ), rowCount( ), rowCount( ) );
         if ( !m_Titles.contains( coordinate.toString( ) ) ) {
+            beginInsertRows( QModelIndex( ), rowCount( ), rowCount( ) );
             m_Titles[ coordinate.toString( ) ] = title;
             //_title = title;
             _startEvent = start;
             _endEvent = end;
             m_coordinates.append( coordinate );
+           endInsertRows( );
         }
-        endInsertRows( );
     }
 
     int rowCount( const QModelIndex &parent = QModelIndex( ) ) const override {
